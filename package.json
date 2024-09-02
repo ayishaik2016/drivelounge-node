@@ -1,0 +1,74 @@
+{
+  "name": "driverlounge_server",
+  "version": "1.0.0",
+  "description": "My Moleculer-based microservices project",
+  "scripts": {
+    "dev": "moleculer-runner --repl --hot services/**/*.service.js",
+    "start": "NODE_ENV=development node ./node_modules/nodemon/bin/nodemon.js ./server.js",
+    "develop": "SET NODE_ENV=dev&& node ./node_modules/nodemon/bin/nodemon.js ./server.js",
+    "cli": "moleculer connect NATS",
+    "ci": "jest --watch",
+    "test": "jest --coverage",
+    "lint": "eslint services",
+    "dc:up": "docker-compose up --build -d",
+    "dc:logs": "docker-compose logs -f",
+    "dc:down": "docker-compose down"
+  },
+  "keywords": [
+    "microservices",
+    "moleculer"
+  ],
+  "author": "Kanniyappan T",
+  "devDependencies": {
+    "eslint": "^7.7.0",
+    "jest": "^26.4.2",
+    "jest-cli": "^26.4.2",
+    "moleculer-repl": "^0.6.4"
+  },
+  "dependencies": {
+    "@nestjs/platform-express": "^9.3.12",
+    "@nestjs/platform-fastify": "^9.3.12",
+    "annotations": "^1.1.2",
+    "confidence": "^4.0.2",
+    "connect-busboy": "0.0.2",
+    "cors": "^2.8.5",
+    "coupon-code": "^0.4.5",
+    "date-fns": "^2.19.0",
+    "google-auth-library": "^6.0.6",
+    "handlebars": "^4.7.6",
+    "haversine": "^1.1.1",
+    "ip": "^1.1.5",
+    "jsonwebtoken": "^8.5.1",
+    "luxon": "^3.3.0",
+    "moleculer": "^0.14.10",
+    "moleculer-db": "^0.8.4",
+    "moleculer-db-adapter-mongo": "^0.4.7",
+    "moleculer-db-adapter-sequelize": "^0.2.8",
+    "moleculer-mail": "^1.2.5",
+    "moleculer-web": "^0.9.0",
+    "multer": "^1.4.2",
+    "nats": "^1.4.12",
+    "nodemailer": "^6.4.11",
+    "nodemon": "^2.0.4",
+    "otp-generator": "^2.0.0",
+    "password-hash": "^1.2.2",
+    "pipe": "^1.1.0",
+    "randomstring": "^1.1.5",
+    "sequelize": "^6.3.5",
+    "sniffr": "^1.2.0",
+    "tedious": "^9.2.1",
+    "web-push": "^3.4.4"
+  },
+  "engines": {
+    "node": ">= 10.x.x"
+  },
+  "main": "server.js",
+  "jest": {
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node",
+    "rootDir": "./services",
+    "roots": [
+      "../test"
+    ]
+  }
+}

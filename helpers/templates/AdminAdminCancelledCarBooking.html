@@ -1,0 +1,336 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+      <title>Booking Successfully</title>
+      <style>
+         body{ margin:0px; padding: 0px; height: 100%;}
+         html{ height: 100%; }
+      </style>
+   </head>
+   <body>
+      <!-- main full table -->
+      <table width="100%" align="center" cellpadding="0" cellspacing="0" style="border:none;">
+         <tbody>
+            <!-- spacing -->
+            <tr>
+               <td height="50"></td>
+            </tr>
+            <!-- spacing -->
+            <!-- container -->
+            <tr>
+               <td>
+                  <table width="600" align="center" cellpadding="0" cellspacing="0" bgcolor="#ffffff" style="box-shadow:0px 0px 5px 0px #c5c5c5; border-radius: 5px;    font-family: 'Roboto', Sans-serif;">
+                     <tbody>
+                        <tr>
+                           <td height="100" align="center">
+                              <a href="https://drivelounge.com/" target="_blank">
+                                 <img src="https://api.drivelounge.com/logo.png" width="90" height="70" alt="logo"></a>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>
+                              <!-- main content -->
+                              <table width="550" align="center" cellpadding="0" cellspacing="0">
+                                 <tbody>
+                                    <tr>
+                                       <td>
+                                          <h2 style="margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">Dear Admin,</h2>
+                                          <p style="    font-size: 16px;
+                                             color: #545454;
+                                             margin: 0;
+                                             margin-bottom: 20px;
+                                             line-height: 1.6;">Please be advised Drive Lounge cancelled the booking <b>{{booking_number}}</b>.
+                                             <br /><br />
+										  <h2 style="padding-top:30px;text-align:right;margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">Admin السادة</h2>
+                                          <p style="    font-size: 16px;
+                                             color: #545454;
+                                             margin: 0;
+                                             margin-bottom: 20px;
+                                             text-align:right;
+                                             line-height: 1.6;">للأسف، لقد قام موقع درايف لاونج بإلغاء الحجز رقم  <b>{{booking_number}}</b></p>
+<table cellpadding="0" style="border-collapse: separate;border-spacing: 0 1em;" width="100%">
+	<tr>
+		<td style="width:20%;background-color: #ffffff;">&nbsp;</td>
+		<td style="width:25%;background-color: #ffffff;">&nbsp;</td>
+		<td style="width:10%;background-color: #ffffff;">&nbsp;</td>
+		<td style="width:20%;background-color: #ffffff;">&nbsp;</td>
+		<td style="width:25%;background-color: #ffffff;">&nbsp;</td>
+	</tr>
+	<tr>
+	   <td colspan="5" style="border-radius: 10px;
+	   background: #d1d1d1;
+	   font-size: large;
+	   padding: 14px;">
+			<div style="float:left;"><b>Booking Information</b></div>
+			<div style="float:right;"><b>معلومات الحجز</b></div>
+			<div style="clear:both;"></div>
+	   </td>
+   </tr>
+   <tr>
+		<td colspan="2" style="border-radius: 10px;
+		background: #d1d1d1;
+		padding: 14px;">
+			<div style="float:left;">Booking No.</div>
+			<div style="float:right;">رقم الحجوزات</div>
+			<div style="clear:both;"></div>
+			<div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{booking_number}}</div>
+		</td>
+		<td>&nbsp;</td>
+		<td colspan="2" style="border-radius: 10px;
+		background: #d1d1d1;
+		padding: 14px;">
+			<div style="float:left;">Booking Date</div>
+			<div style="float:right;">تاريخ الحجز</div>
+			<div style="clear:both;"></div>
+			<div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{booking_date}}</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="border-radius: 10px;
+		background: #d1d1d1;
+		padding: 14px;">
+			<div style="float:left;">Pickup City</div>
+			<div style="float:right;">مدينة الاستلام</div>
+			<div style="clear:both;"></div>
+			<div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{pickup_city}}</div>
+		</td>
+		<td>&nbsp;</td>
+		<td colspan="2" style="border-radius: 10px;
+		background: #d1d1d1;
+		padding: 14px;">
+			<div style="float:left;">Dropoff City</div>
+			<div style="float:right;">مدينة التسليم</div>
+			<div style="clear:both;"></div>
+			<div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{dropoff_city}}</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="border-radius: 10px;
+		background: #d1d1d1;
+		padding: 14px;">
+			<div style="float:left;">Pickup Date</div>
+			<div style="float:right;">تاريخ الاستلام</div>
+			<div style="clear:both;"></div>
+			<div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{pickup_date_time}}</div>
+		</td>
+		<td>&nbsp;</td>
+		<td colspan="2" style="border-radius: 10px;
+		background: #d1d1d1;
+		padding: 14px;">
+			<div style="float:left;">Dropoff Date</div>
+			<div style="float:right;">تاريخ التسليم</div>
+			<div style="clear:both;"></div>
+			<div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{dropoff_date_time}}</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="5">&nbsp;</td>
+	</tr>
+	<tr>
+		<td colspan="5" style="border-radius: 10px;
+		background: #d1d1d1;
+		font-size: large;
+		padding: 14px;">
+			<div style="float:left;"><b>Payment Information</b></div>
+			<div style="float:right;"><b>معلومات الدفع</b></div>
+			<div style="clear:both;"></div>
+		</td>
+	</tr>
+	<tr>
+		 <td colspan="2" style="border-radius: 10px;
+		 background: #d1d1d1;
+		 padding: 14px;">
+			 <div style="float:left;">Price per day</div>
+			 <div style="float:right;">السعر باليوم</div>
+			 <div style="clear:both;"></div>
+			 <div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{price_per_date}}</div>
+		 </td>
+		 <td>&nbsp;</td>
+		 <td colspan="2" style="border-radius: 10px;
+		 background: #d1d1d1;
+		 padding: 14px;">
+			 <div style="float:left;">Total Rental Days</div>
+			 <div style="float:right;">إجمالي أيام الإيجار</div>
+			 <div style="clear:both;"></div>
+			 <div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{total_rental_days}}</div>
+		 </td>
+	 </tr>
+	 <tr>
+		<td colspan="2" style="border-radius: 10px;
+		background: #d1d1d1;
+		padding: 14px;">
+			<div style="float:left;">VAT</div>
+			<div style="float:right;">ضريبة القيمة المضافة</div>
+			<div style="clear:both;"></div>
+			<div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{vat}}</div>
+		</td>
+		<td>&nbsp;</td>
+		<td colspan="2" style="border-radius: 10px;
+		background: #d1d1d1;
+		padding: 14px;">
+			<div style="float:left;">Total Cost</div>
+			<div style="float:right;">التكلفة الإجمالية</div>
+			<div style="clear:both;"></div>
+			<div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{total_cost}}</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="border-radius: 10px;
+		background: #d1d1d1;
+		padding: 14px;">
+			<div style="float:left;">Deposit </div>
+			<div style="float:right;">الإيداع</div>
+			<div style="clear:both;"></div>
+			<div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{deposit}}</div>
+		</td>
+		<td>&nbsp;</td>
+		<td colspan="2" style="border-radius: 10px;
+		background: #d1d1d1;
+		padding: 14px;">
+			<div style="float:left;">Coupon Value</div>
+			<div style="float:right;">قيمة الكابون</div>
+			<div style="clear:both;"></div>
+			<div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{coupon_value}}</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="5">&nbsp;</td>
+	</tr>
+	<tr>
+		<td colspan="5" style="border-radius: 10px;
+		background: #d1d1d1;
+		font-size: large;
+		padding: 14px;">
+			<div style="float:left;"><b>Car Information</b></div>
+			<div style="float:right;"><b>معلومات السيارة</b></div>
+			<div style="clear:both;"></div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="
+		padding: 14px;">
+			<img src="{{car_image_path}}" style="width:100%;height:auto;"/>
+		</td>
+	</tr>
+	<tr>
+		 <td colspan="2" style="border-radius: 10px;
+		 background: #d1d1d1;
+		 padding: 14px;">
+			 <div style="float:left;">Car Number</div>
+			 <div style="float:right;">رقم السيارة</div>
+			 <div style="clear:both;"></div>
+			 <div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{car_number}}</div>
+		 </td>
+		 <td>&nbsp;</td>
+		 <td colspan="2" style="border-radius: 10px;
+		 background: #d1d1d1;
+		 padding: 14px;">
+			 <div style="float:left;">Make</div>
+			 <div style="float:right;">الماركة</div>
+			 <div style="clear:both;"></div>
+			 <div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{make}}</div>
+		 </td>
+	 </tr>
+	 <tr>
+		<td colspan="2" style="border-radius: 10px;
+		background: #d1d1d1;
+		padding: 14px;">
+			<div style="float:left;">Car Year</div>
+			<div style="float:right;">سنة الصنع</div>
+			<div style="clear:both;"></div>
+			<div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{car_year}}</div>
+		</td>
+		<td>&nbsp;</td>
+		<td colspan="2" style="border-radius: 10px;
+		background: #d1d1d1;
+		padding: 14px;">
+			<div style="float:left;">Car Model</div>
+			<div style="float:right;">موديل السيارة</div>
+			<div style="clear:both;"></div>
+			<div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;">{{car_model}}</div>
+		</td>
+	</tr>
+	{{#if showmap}}
+	<tr>
+		<td colspan="5">&nbsp;</td>
+	</tr>
+	<tr>
+		<td colspan="5" style="border-radius: 10px;
+		background: #d1d1d1;
+		font-size: large;
+		padding: 14px;">
+			<div style="float:left;"><b>Receiving Address</b></div>
+			<div style="float:right;"><b>عنوان الاستلام</b></div>
+			<div style="clear:both;"></div>
+		</td>
+	</tr>
+	<tr>
+		 <td colspan="5" style="border-radius: 10px;
+		 background: #d1d1d1;
+		 padding: 14px;">
+			 <div style="float:left;">Receiving Address</div>
+			 <div style="float:right;">عنوان الاستلام</div>
+			 <div style="clear:both;"></div>
+			 <div style="font-weight: bold; width:100%; text-align:center;margin-top: 10px;"><a href="https://www.google.com/maps/place/{{receiving_address_lat}}+{{receiving_address_lng}}" target="_blank">{{receiving_address}}</a></div>
+		 </td>
+	 </tr>
+	 {{/if}}
+</table>
+                                          <p style=" font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">Thanks,</p>
+                                          <p style=" font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">Drive Lounge</p>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td height="30"></td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                              <!-- main content -->
+							 </td>
+						  </tr>
+						  <!-- footer -->
+						<tr>
+						   <td>
+							  <table width="600" align="center" cellpadding="0" cellspacing="0" bgcolor="#f0f3f5" style=" font-family: 'Roboto', Sans-serif;">
+								 <tbody>
+									<tr>
+									   <td align="center">
+										  <p style="color: #777; font-size: 15px">&copy; Drivelounge {{copyright_year}}</p>
+									   </td>
+									</tr>
+									<tr>
+									   <td align="center">
+										  <p style="margin: 0;line-height: 1.6;color: #777; font-size: 15px">If you have any questions, please contact us on the following email <br> <a href="mailto:support@drivelounge.com" style="color: #000;">support@drivelounge.com</a></p>
+									   </td>
+									</tr>
+									<tr>
+									   <td align="center">
+										  &nbsp;
+									   </td>
+									</tr>
+								 </tbody>
+							  </table>
+						   </td>
+						</tr>
+						<!-- footer -->
+					   </tbody>
+					</table>
+				 </td>
+			  </tr>
+			  <!-- container -->
+			  <tr>
+				 <td height="30"></td>
+			  </tr>
+			  <tr>
+				 <td height="50"></td>
+			  </tr>
+			  <!-- spacing -->
+		   </tbody>
+		</table>
+		<!-- main full table -->
+	 </body>
+</html>
