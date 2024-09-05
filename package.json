@@ -4,7 +4,7 @@
   "description": "My Moleculer-based microservices project",
   "scripts": {
     "dev": "moleculer-runner --repl --hot services/**/*.service.js",
-    "start": "NODE_ENV=development node ./node_modules/nodemon/bin/nodemon.js ./server.js",
+    "start": "cross-env NODE_ENV=development node ./node_modules/nodemon/bin/nodemon.js ./server.js",
     "develop": "SET NODE_ENV=dev&& node ./node_modules/nodemon/bin/nodemon.js ./server.js",
     "cli": "moleculer connect NATS",
     "ci": "jest --watch",
@@ -20,6 +20,7 @@
   ],
   "author": "Kanniyappan T",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^7.7.0",
     "jest": "^26.4.2",
     "jest-cli": "^26.4.2",

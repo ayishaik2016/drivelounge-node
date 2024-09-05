@@ -100,6 +100,7 @@ module.exports = {
         "POST booking/reservation": "booking.create",
         "PUT booking/confirmation": "booking.update",
         "PUT booking/changes": "booking.update_info",     
+        "PUT booking/userChanges": "booking.update_changes_info",     
         "PUT booking/payment": "booking.admin_pay",   
         "GET booking/getreservation": "booking.getbyid",
         

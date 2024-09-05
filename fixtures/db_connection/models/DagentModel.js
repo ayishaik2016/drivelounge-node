@@ -171,6 +171,14 @@ module.exports = {
             allowNull: true,
             defaultValue: 1
         },
+        openinghours: {
+            type: Sequelize.STRING(25),
+            allowNull: true
+        },
+        closinghours: {
+            type: Sequelize.STRING(25),
+            allowNull: true
+        },
         created_by: {
             type: Sequelize.INTEGER(4),
             allowNull: true,

@@ -167,6 +167,9 @@ module.exports = {
                       usertypeid: ctx.params.usertypeid,
                       roleid: ctx.params.roleid,
                       panel: ctx.params.panel,
+                      dateofbirth: ctx.params.dob,
+                      passportnumber: ctx.params.passportnumber,
+                      nationalityid: ctx.params.nationalityid,
                     });
                   });
                 } else {
@@ -184,6 +187,9 @@ module.exports = {
                     usertypeid: ctx.params.usertypeid,
                     roleid: ctx.params.roleid,
                     panel: ctx.params.panel,
+                    dateofbirth: ctx.params.dob,
+                    passportnumber: ctx.params.passportnumber,
+                    nationalityid: ctx.params.nationalityid,
                   });
                 }
               });
@@ -1123,13 +1129,14 @@ module.exports = {
               vatdocs: ctx.params.vatdocument,
               crnumber: ctx.params.crnumber,
               crdocs: ctx.params.crdocument,
-              vatstatus:
-                ctx.params.vatstatus !== undefined ? ctx.params.vatstatus : 1,
+              vatstatus:ctx.params.vatstatus !== undefined ? ctx.params.vatstatus : 1,
               servicelocation: ctx.params.servicelocation,
               address: ctx.params.address,
               latitude: ctx.params.lat,
               longitude: ctx.params.lng,
               isverified: 0,
+              openinghours: ctx.params.openingHours,
+              closinghours: ctx.params.closingHours,
             })
               .then((response) => {
                 AgentLang.insert(ctx, {

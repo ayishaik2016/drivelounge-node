@@ -73,6 +73,10 @@ module.exports = {
             params: BookingValidator.update_info,
             handler: BookingController.update_info,
         },
+        update_changes_info: {
+            params: BookingValidator.update_changes_info,
+            handler: BookingController.update_changes_info,
+        },
 
         admin_pay: {
             params: BookingValidator.admin_pay,

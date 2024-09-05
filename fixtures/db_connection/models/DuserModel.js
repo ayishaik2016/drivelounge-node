@@ -32,6 +32,14 @@ module.exports = {
 			type: Sequelize.STRING(250),
             allowNull: true,
 		},
+		dateofbirth: {
+			type: Sequelize.STRING(250),
+			allowNull: true,
+        },
+		passportnumber: {
+			type: Sequelize.INTEGER,
+			allowNull: true,
+		},
 		password: {
 			type: Sequelize.STRING(250),
             allowNull: true,
@@ -47,6 +55,10 @@ module.exports = {
 		contactnumber: {
 			type: Sequelize.STRING(20),
             allowNull: true,
+		},
+		nationalityid: {
+			type: Sequelize.SMALLINT,
+			allowNull: true,
 		},
 		countryid: {
 			type: Sequelize.SMALLINT,

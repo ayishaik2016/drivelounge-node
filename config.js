@@ -147,8 +147,8 @@ const config = {
           mssqlEnvironment: {
              $filter: 'env',
           production: {
-            "username": "Drive",
-            "password": "P@ssw0rd",
+            "username": "dluser",
+            "password": "dN*3pk4qg7",
             "database": "Drive demo",
             "host": "13.94.34.229",
             "instancename": "MSQLEXPRESS",
@@ -156,8 +156,8 @@ const config = {
             "port": "1433"
         },
         dev: {
-            "username": "Drive",
-            "password": "P@ssw0rd",
+            "username": "dluser",
+            "password": "dN*3pk4qg7",
             "database": "Drive demo",
             "host": "13.94.34.229",
             "instancename": "MSQLEXPRESS",
@@ -165,8 +165,10 @@ const config = {
             "port": "1433"
         },
         $default: {
-            "username": "Drive",
-            "password": "P@ssw0rd",
+            // "username": "Drive",
+            // "password": "P@ssw0rd",
+            "username": "dluser",
+            "password": "dN*3pk4qg7",
             "database": "Drive demo",
             "host": "13.94.34.229",
             "instancename": "MSQLEXPRESS",

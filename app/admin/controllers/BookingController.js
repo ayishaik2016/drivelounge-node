@@ -670,6 +670,233 @@ module.exports = {
       });
     });
   },
+
+  update_changes_info: async function (ctx) {
+    return Booking.updateBy(
+      ctx,
+      ctx.params.id,
+      {
+        pickupplace: ctx.params.pickupplace,
+        pickupdate: ctx.params.pickupdate,
+        dropoffplace: ctx.params.dropplace,
+        dropoffdate: ctx.params.dropoffdate,
+        totalrentaldays: ctx.params.totalrentaldays,
+        vatamount: ctx.params.vatamount,
+        subtotal: ctx.params.subtotal,
+        totalcost: ctx.params.totalcost,
+        pickupaddress: ctx.params.pickupaddress,
+        dropoffaddress: ctx.params.dropoffaddress,
+        changerequeststatus: 0,
+        changerequest: 1,
+      },
+      {
+        query: { id: ctx.params.id },
+      }
+    ).then((booking) => {
+      return BookingFeature.updateBy(
+        ctx,
+        ctx.params.id,
+        {
+          pickupcityid: ctx.params.pickupcityid,
+          dropcityid: ctx.params.dropcityid,
+          pickuplat: ctx.params.pickuplat,
+          pickuplang: ctx.params.pickuplng,
+          droplat: ctx.params.droplat,
+          droplang: ctx.params.droplng,
+        },
+        {
+          query: { bookingid: ctx.params.id },
+        }
+      ).then((res) => {
+        return User.findOne(ctx, {
+          query: { id: booking.data[0].created_by },
+        }).then(async (ans) => {
+          ctx.meta.log = "Change request for booking";
+          activity.setLog(ctx);
+
+
+        return await sequelize12
+        .query("exec sp_GetBookingInformationByID_new @Id=:id, @Lang=:lang", {
+          replacements: { id: ctx.params.id, lang: 1 },
+          type: Sequ.QueryTypes.SELECT,
+        })
+            .then(async (carDetails) => {
+
+          let replacements = {
+            name: `${ans.data.firstname} ${ans.data.lastname}`,
+            booking_number: booking.data[0].bookingcode,
+            booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+            pickup_city: booking.data[0].pickupplace,
+            dropoff_city: booking.data[0].dropoffplace,
+            pickup_date_time: dlTimer.convertToLocal(ctx, booking.data[0].pickupdate.toISOString()),
+            dropoff_date_time: dlTimer.convertToLocal(ctx, booking.data[0].dropoffdate.toISOString()),
+
+            price_per_date: booking.data[0].priceperday,
+            total_rental_days: booking.data[0].totalrentaldays,
+            vat: booking.data[0].vatamount,
+            total_cost: booking.data[0].totalcost,
+            deposit: booking.data[0].deposit,
+            coupon_value: booking.data[0].couponvalue,
+
+            booking_user_name: carDetails[0].fullname,
+            booking_user_contact_number: carDetails[0].contactnumber,
+            booking_user_email: carDetails[0].email,
+            booking_user_address: carDetails[0].address,
+
+            booking_agency_name: carDetails[0].agencyname,
+            booking_agency_contact_number: carDetails[0].agencycontact,
+            booking_agency_address: carDetails[0].agencyaddress,
+            booking_agency_address_lat:carDetails[0].agentlat,
+            booking_agency_address_lng:carDetails[0].agentlang,
+
+            receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
+            receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
+            receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
+            showmap: carDetails[0].showmap == 1 ? true : false,
+
+            car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
+            car_number: carDetails[0].carno,
+            make: carDetails[0].carbrand,
+            car_year: carDetails[0].caryear,
+            car_model: carDetails[0].carmodel,
+
+            subject: ConstantsMailTemplate.UserUserCarBookingSubject,
+          };
+
+          dlMailer.sendMail(ctx, ConstantsMailTemplate.UserUserCarBooking, ans.data.email, replacements);
+
+          replacements = {
+            booking_number: booking.data[0].bookingcode,
+            booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+            pickup_city: booking.data[0].pickupplace,
+            dropoff_city: booking.data[0].dropoffplace,
+            pickup_date_time: dlTimer.convertToLocal(ctx, booking.data[0].pickupdate.toISOString()),
+            dropoff_date_time: dlTimer.convertToLocal(ctx, booking.data[0].dropoffdate.toISOString()),
+
+            price_per_date: booking.data[0].priceperday,
+            total_rental_days: booking.data[0].totalrentaldays,
+            vat: booking.data[0].vatamount,
+            total_cost: booking.data[0].totalcost,
+            deposit: booking.data[0].deposit,
+            coupon_value: booking.data[0].couponvalue,
+
+            booking_user_name: carDetails[0].fullname,
+            booking_user_contact_number: carDetails[0].contactnumber,
+            booking_user_email: carDetails[0].email,
+            booking_user_address: carDetails[0].address,
+
+            booking_agency_name: carDetails[0].agencyname,
+            booking_agency_contact_number: carDetails[0].agencycontact,
+            booking_agency_address: carDetails[0].agencyaddress,
+            booking_agency_address_lat:carDetails[0].agentlat,
+            booking_agency_address_lng:carDetails[0].agentlang,
+
+            receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
+            receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
+            receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
+            showmap: carDetails[0].showmap == 1 ? true : false,
+
+            car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
+            car_number: carDetails[0].carno,
+            make: carDetails[0].carbrand,
+            car_year: carDetails[0].caryear,
+            car_model: carDetails[0].carmodel,
+
+            agency_name: AgencyEmail[0].agencyname,
+            subject: ConstantsMailTemplate.AgencyUserCarBookingSubject,
+          };
+
+          dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyUserCarBooking, AgencyEmail[0].email, replacements);
+
+          replacements = {
+            booking_number: booking.data[0].bookingcode,
+            booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+            pickup_city: booking.data[0].pickupplace,
+            dropoff_city: booking.data[0].dropoffplace,
+            pickup_date_time: dlTimer.convertToLocal(ctx, booking.data[0].pickupdate.toISOString()),
+            dropoff_date_time: dlTimer.convertToLocal(ctx, booking.data[0].dropoffdate.toISOString()),
+
+            price_per_date: booking.data[0].priceperday,
+            total_rental_days: booking.data[0].totalrentaldays,
+            vat: booking.data[0].vatamount,
+            total_cost: booking.data[0].totalcost,
+            deposit: booking.data[0].deposit,
+            coupon_value: booking.data[0].couponvalue,
+
+            booking_user_name: carDetails[0].fullname,
+            booking_user_contact_number: carDetails[0].contactnumber,
+            booking_user_email: carDetails[0].email,
+            booking_user_address: carDetails[0].address,
+
+            booking_agency_name: carDetails[0].agencyname,
+            booking_agency_contact_number: carDetails[0].agencycontact,
+            booking_agency_address: carDetails[0].agencyaddress,
+            booking_agency_address_lat:carDetails[0].agentlat,
+            booking_agency_address_lng:carDetails[0].agentlang,
+
+            receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
+            receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
+            receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
+            showmap: carDetails[0].showmap == 1 ? true : false,
+
+            car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
+            car_number: carDetails[0].carno,
+            make: carDetails[0].carbrand,
+            car_year: carDetails[0].caryear,
+            car_model: carDetails[0].carmodel,
+
+            agency_name: AgencyEmail[0].agencyname,
+            subject: ConstantsMailTemplate.AdminUserCarBookingSubject,
+          };
+
+          dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminUserCarBooking, Constants.AdminMailId, replacements);
+
+          /*
+            // Sending mail after user update
+            let readHTMLFile = function (path, callback) {
+              fs.readFile(path, { encoding: "utf-8" }, function (err, html) {
+                if (err) {
+                  throw err;
+                } else {
+                  callback(null, html);
+                }
+              });
+            };
+            //Reads the html template,body of the mail content
+            readHTMLFile(
+              mail_template + "/Bookingtemplate.html",
+              function (err, html) {
+                let template = handlebars.compile(html);
+                let replacements = {
+                  Name: ans.data.firstname,
+                  booking_id: booking.data[0].bookingcode,
+                  booking_cost: booking.data[0].totalcost,
+                  message12: "Booking Information Changed",
+                };
+                const htmlToSend = template(replacements);
+                // this method call the mail service to send mail
+                ctx
+                  .call("mail.send", {
+                    to: ans.data.email,
+                    subject: "Booking Changes Successfull",
+                    html: htmlToSend,
+                  })
+                  .then((res) => {
+                    return "Email sent successfully.";
+                  });
+              }
+            );
+            */
+
+            return this.requestSuccess(
+              "Your Service Booked Successfully",
+              booking.data[0].id
+            );
+          });
+        });
+      });
+    });
+  },
   update: async function (ctx) {
     return Booking.updateBy(
       ctx,
