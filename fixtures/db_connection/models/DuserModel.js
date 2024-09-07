@@ -33,7 +33,7 @@ module.exports = {
             allowNull: true,
 		},
 		dateofbirth: {
-			type: Sequelize.STRING(250),
+			type: Sequelize.STRING(250), 
 			allowNull: true,
         },
 		passportnumber: {
