@@ -33,11 +33,11 @@ module.exports = {
             allowNull: true,
 		},
 		dateofbirth: {
-			type: Sequelize.STRING(250), 
+			type: Sequelize.STRING(30), 
 			allowNull: true,
         },
-		passportnumber: {
-			type: Sequelize.INTEGER,
+		passportno: {
+			type: Sequelize.STRING(50),
 			allowNull: true,
 		},
 		password: {

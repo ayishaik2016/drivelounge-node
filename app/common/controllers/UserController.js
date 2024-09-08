@@ -167,8 +167,8 @@ module.exports = {
                       usertypeid: ctx.params.usertypeid,
                       roleid: ctx.params.roleid,
                       panel: ctx.params.panel,
-                      dateofbirth: ctx.params.dob,
-                      passportnumber: ctx.params.passportnumber,
+                      dateofbirth: ctx.params.dateofbirth,
+                      passportno: ctx.params.passportno,
                       nationalityid: ctx.params.nationalityid,
                     });
                   });
@@ -187,8 +187,8 @@ module.exports = {
                     usertypeid: ctx.params.usertypeid,
                     roleid: ctx.params.roleid,
                     panel: ctx.params.panel,
-                    dateofbirth: ctx.params.dob,
-                    passportnumber: ctx.params.passportnumber,
+                    dateofbirth: ctx.params.dateofbirth,
+                    passportno: ctx.params.passportno,
                     nationalityid: ctx.params.nationalityid,
                   });
                 }
@@ -493,6 +493,9 @@ module.exports = {
               usertypeid: ctx.params.usertypeid,
               panel: ctx.params.panel,
               userstatus: ctx.params.status,
+              dateofbirth: ctx.params.dateofbirth,
+              passportno: ctx.params.passportno,
+              nationalityid: ctx.params.nationalityid,
             })
               .then(async (response) => {
 
@@ -606,6 +609,9 @@ module.exports = {
         email: ctx.params.email,
         contactnumber: ctx.params.contactnumber,
         userstatus: ctx.params.status,
+        dateofbirth: ctx.params.dateofbirth,
+        passportno: ctx.params.passportno,
+        nationalityid: ctx.params.nationalityid,
       },
       { query: { id: ctx.params.id } }
     )
@@ -1308,6 +1314,8 @@ module.exports = {
               isverified: 1,
               status: ctx.params.status,
               agencyname: ctx.params.agentname,
+              openinghours: ctx.params.openingHours,
+              closinghours: ctx.params.closingHours,
               vatstatus:
                 ctx.params.vatstatus !== undefined ? ctx.params.vatstatus : 1,
             })
@@ -1437,6 +1445,8 @@ module.exports = {
             paymentoption: ctx.params.paymentoption,
             photopath: ctx.params.photopath,
             status: ctx.params.status,
+            openinghours: ctx.params.openinghours,
+            closinghours: ctx.params.closinghours,
             vatstatus:
               ctx.params.vatstatus !== undefined ? ctx.params.vatstatus : 1,
           },
