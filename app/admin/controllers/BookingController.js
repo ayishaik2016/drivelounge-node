@@ -1947,6 +1947,25 @@ module.exports = {
     return Booking.find(ctx, { query: { id: ctx.params.id } })
       .then((res) => {
         if (res) {
+          let cancelationdays = 0;
+          let cancelationcharges = 0;
+          let cancelationtotalamount = 0;
+          
+          if(ctx.params.status == 0) {
+            const pickupDate = new Date(res.data[0].pickupdate);
+            const currentDate = new Date();
+            
+            const timeDifference = pickupDate - currentDate;
+            const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+            if(daysDifference <= 1) {
+              const priceperday = res.data[0].priceperday;
+              const vatpercent = res.data[0].vatpercent;
+
+              cancelationdays = Math.abs(Math.ceil(daysDifference));
+              cancelationcharges = cancelationdays * priceperday;
+              cancelationtotalamount = cancelationcharges * (vatpercent/100);
+            }
+          }
           return Booking.updateBy(
             ctx,
             ctx.params.id,
@@ -1954,6 +1973,9 @@ module.exports = {
               bookingstatus: ctx.params.status,
               usertype: ctx.params.usertype,
               cancellationreason: reason,
+              cancelationdays: cancelationdays,
+              cancelationcharges: cancelationcharges,
+              cancelationtotalamount: cancelationtotalamount
             },
             {
               query: { id: ctx.params.id },

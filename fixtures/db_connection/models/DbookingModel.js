@@ -158,6 +158,21 @@ module.exports = {
       type: Sequelize.INTEGER,
       allowNull: true,
     },
+    cancelationdays: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      defaultValue: 0
+    },
+    cancelationcharges: {
+      type: Sequelize.DECIMAL(12, 3),
+      allowNull: true,
+      defaultValue: 0
+    },
+    cancelationtotalamount: {
+      type: Sequelize.DECIMAL(12, 3),
+      allowNull: true,
+      defaultValue: 0
+    },
     // pickuplat: {
     //     type: Sequelize.STRING(250),
     //     allowNull: true
