@@ -212,7 +212,7 @@ module.exports = {
   },
 
   confirmation: async function (ctx) {
-    if(ctx.params.result == 'failure') {
+    if(ctx.params.result == 'Failure') {
       return Booking.updateBy(
         ctx,
         ctx.params.id,
