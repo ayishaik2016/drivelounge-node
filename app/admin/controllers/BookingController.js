@@ -137,7 +137,7 @@ module.exports = {
       "customerEmail" : "test@gmail.com",
       "currency": DEFAULT_CURRENCY,
       "udf1": bookingCode,
-      "udf2": 'https://api.drivelounge.com/paymentconfirmation/?id=' + bookingCode,
+      "udf2": 'https://drivelounge.com/paymentconfirmation?id=' + bookingCode,
       "udf3": "SA",
       "metaData":"{\"entryone\":\"A\",\"entrytwo\":\"J\",\"entrythree\":\"xyz\"}",
     };
