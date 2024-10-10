@@ -223,7 +223,7 @@ module.exports = {
           query: { bookingcode: ctx.params.id },
         }
       ).then(async (res) => {
-        return this.requestError("Payment Confirmation", res);
+        return this.requestSuccess("Payment Confirmation", "failure");
       })
       .catch((err) => {
         console.log(err);
@@ -389,7 +389,7 @@ module.exports = {
 
               dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminUserCarBooking, Constants.AdminMailId, replacements);
 
-              return this.requestSuccess("Payment Confirmation", res);
+              return this.requestSuccess("Payment Confirmation", "success");
           });
         });
       })
