@@ -123,6 +123,10 @@ module.exports = {
             handler: BookingController.booking_status,
         },
 
+        confirmation: {
+            handler: BookingController.confirmation,
+        },
+
         remove: {
             params: BookingValidator.remove,
             handler: BookingController.remove,
