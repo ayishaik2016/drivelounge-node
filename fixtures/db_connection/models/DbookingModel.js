@@ -173,6 +173,10 @@ module.exports = {
       allowNull: true,
       defaultValue: 0
     },
+    paymenttransactionjson: {
+      type: Sequelize.STRING(1000),
+      allowNull: true
+    },
     // pickuplat: {
     //     type: Sequelize.STRING(250),
     //     allowNull: true

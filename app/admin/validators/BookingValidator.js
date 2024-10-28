@@ -12,9 +12,6 @@ module.exports = {
         // devicetype: {type: "string", min: 2,required: true},        
         // devicetoken: {type: "string", min: 3,required: true},
     },
-    confirmation: {
-
-    },
     getall: {
         status: "string"
     },

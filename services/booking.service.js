@@ -23,12 +23,6 @@ module.exports = {
             params: BookingValidator.create,
             handler: BookingController.create,
         },
-
-        confirmation: {
-            params: BookingValidator.confirmation,
-            handler: BookingController.confirmation,
-        },
- 
         getAll: {
             params: BookingValidator.getAll,
             handler: BookingController.getAll,

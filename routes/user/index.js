@@ -103,7 +103,6 @@ module.exports = {
         "PUT booking/userChanges": "booking.update_changes_info",     
         "PUT booking/payment": "booking.admin_pay",   
         "GET booking/getreservation": "booking.getbyid",
-        "POST booking/paymentconfirmation": "booking.confirmation",
         
         "GET booking/getuserinfo": "booking.getuserinfo",
         "GET booking/getbookinginfo": "booking.getbookinginfo",
