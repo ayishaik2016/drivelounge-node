@@ -2923,7 +2923,7 @@ module.exports = {
 
               dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminUserCarBooking, Constants.AdminMailId, replacements);
 
-              return this.requestSuccess("Payment Confirmation", "success");
+              return this.requestSuccess("Payment Confirmation", res);
           });
         });
       })
