@@ -1909,9 +1909,7 @@ module.exports = {
           
           if(ctx.params.status == 1) {
             const totalCost = res.data[0].totalcost;
-            const bookingCode = Math.floor(
-              Math.pow(10, 6 - 1) + Math.random() * 8 * Math.pow(10, 6 - 1)
-            ); 
+            const bookingCode = res.data[0].bookingCode;
 
             // const clientIp = ctx.ip || ctx.connection.remoteAddress;
             const clientIp = ctx.ip || '';
