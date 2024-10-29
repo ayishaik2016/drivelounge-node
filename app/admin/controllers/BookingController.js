@@ -1901,6 +1901,7 @@ module.exports = {
               cancelationtotalamount = cancelationcharges * (vatpercent/100);
             }
 
+            bookingArr.paymentstatus = 3;
             bookingArr.cancellationreason = reason;
             bookingArr.cancelationdays = cancelationdays;
             bookingArr.cancelationcharges = cancelationcharges;
