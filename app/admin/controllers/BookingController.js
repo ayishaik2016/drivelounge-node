@@ -2745,191 +2745,272 @@ module.exports = {
   },
 
   confirmation: async function (ctx) {
-    if(ctx.params.result == 'Failure') {
-      return Booking.updateBy(
-        ctx,
-        ctx.params.id,
-        {
-          paymentstatus: 2
-        },
-        {
-          query: { bookingcode: ctx.params.id },
+    return Booking.find(ctx, { query: { bookingcode: ctx.params.id } })
+      .then((bookRes) => {
+        if (bookRes.data.length > 0 && bookRes.data[0].id) {
+          if(bookRes.data[0].paymentstatus == 0) {
+            if(ctx.params.result == 'Failure') {
+              return Booking.updateBy(ctx,
+                ctx.params.id,
+                {
+                  paymentstatus: 2
+                },
+                {
+                  query: { bookingcode: ctx.params.id },
+                }
+              ).then((res1) => {
+                return this.requestSuccess("Payment Confirmation", res1);
+              })
+              .catch((err) => {
+                return this.requestError("Error has occured", err);
+              })
+            } else {
+              return Booking.updateBy(ctx,
+                ctx.params.id,
+                {
+                  paymentstatus: 1
+                },
+                {
+                  query: { bookingcode: ctx.params.id },
+                }
+              ).then(async (res) => {
+                return User.findOne(ctx, {
+                  query: { id: res.data[0].created_by },
+                }).then(async (ans) => {
+                  return await sequelize12
+                  .query("exec sp_GetBookingInformationByID_new @Id=:id, @Lang=:lang", {
+                    replacements: { id: res.data[0].id, lang: 1 },
+                    type: Sequ.QueryTypes.SELECT,
+                  })
+                  .then(async (carDetails) => {
+                   const AgencyEmail = await AgentConfig.find(ctx, {
+                        query: { id: res.data[0].agentid, status: 1 },
+                      }).then((res) => {
+                        return res.data[0];
+                      });
+                      
+                      ctx.meta.log = "New booking added by user without coupon.";
+                      let replacements = {
+                        name: `${ans.data.firstname} ${ans.data.lastname}`,
+                        booking_number: res.data[0].bookingcode,
+                        booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+                        pickup_city: res.data[0].pickupplace,
+                        dropoff_city: res.data[0].dropoffplace,
+                        pickup_date_time: dlTimer.convertToLocal(ctx, res.data[0].pickupdate.toISOString()),
+                        dropoff_date_time: dlTimer.convertToLocal(ctx, res.data[0].dropoffdate.toISOString()),
+                        price_per_date: res.data[0].priceperday,
+                        total_rental_days: res.data[0].totalrentaldays,
+                        vat: res.data[0].vatamount,
+                        total_cost: res.data[0].totalcost,
+                        deposit: res.data[0].deposit,
+                        coupon_value: res.data[0].couponvalue,
+        
+                        booking_user_name: carDetails[0].fullname,
+                        booking_user_contact_number: carDetails[0].contactnumber,
+                        booking_user_email: carDetails[0].email,
+                        booking_user_address: carDetails[0].address,
+        
+                        booking_agency_name: carDetails[0].agencyname,
+                        booking_agency_contact_number: carDetails[0].agencycontact,
+                        booking_agency_address: carDetails[0].agencyaddress,
+                        booking_agency_address_lat:carDetails[0].agentlat,
+                        booking_agency_address_lng:carDetails[0].agentlang,
+        
+                        receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
+                        receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
+                        receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
+                        showmap: carDetails[0].showmap == 1 ? true : false,
+        
+                        car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
+                        car_number: carDetails[0].carno,
+                        make: carDetails[0].carbrand,
+                        car_year: carDetails[0].caryear,
+                        car_model: carDetails[0].carmodel,
+        
+                        // car_image_path: 'https://api.drivelounge.com/' + res.data.imageurl,
+                        // car_number: res.data.carid,
+                        // make: res.data.make,
+                        // car_year: res.data.caryear,
+                        // car_model: res.data.dropoffplace,
+        
+                        subject: ConstantsMailTemplate.UserPaymentCarBookingSubject,
+                      };
+        
+                      dlMailer.sendMail(ctx, ConstantsMailTemplate.UserPaymentCarBooking, ans.data.email, replacements);
+        
+                      replacements = {
+                        booking_number: res.data[0].bookingcode,
+                        booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+                        pickup_city: res.data[0].pickupplace,
+                        dropoff_city: res.data[0].dropoffplace,
+                        pickup_date_time: dlTimer.convertToLocal(ctx, res.data[0].pickupdate.toISOString()),
+                        dropoff_date_time: dlTimer.convertToLocal(ctx, res.data[0].dropoffdate.toISOString()),
+        
+                        price_per_date: res.data[0].priceperday,
+                        total_rental_days: res.data[0].totalrentaldays,
+                        vat: res.data[0].vatamount,
+                        total_cost: res.data[0].totalcost,
+                        deposit: res.data[0].deposit,
+                        coupon_value: res.data[0].couponvalue,
+        
+                        booking_user_name: carDetails[0].fullname,
+                        booking_user_contact_number: carDetails[0].contactnumber,
+                        booking_user_email: carDetails[0].email,
+                        booking_user_address: carDetails[0].address,
+        
+                        booking_agency_name: carDetails[0].agencyname,
+                        booking_agency_contact_number: carDetails[0].agencycontact,
+                        booking_agency_address: carDetails[0].agencyaddress,
+                        booking_agency_address_lat:carDetails[0].agentlat,
+                        booking_agency_address_lng:carDetails[0].agentlang,
+        
+                        receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
+                        receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
+                        receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
+                        showmap: carDetails[0].showmap == 1 ? true : false,
+        
+                        car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
+                        car_number: carDetails[0].carno,
+                        make: carDetails[0].carbrand,
+                        car_year: carDetails[0].caryear,
+                        car_model: carDetails[0].carmodel,
+        
+                        agency_name: AgencyEmail.agencyname,
+                        subject: ConstantsMailTemplate.AgencyUserPaymentCarBookingSubject,
+                      };
+                      
+                      dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyUserPaymentCarBooking, AgencyEmail.email, replacements);
+        
+                      replacements = {
+                        booking_number: res.data[0].bookingcode,
+                        booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+                        pickup_city: res.data[0].pickupplace,
+                        dropoff_city: res.data[0].dropoffplace,
+                        pickup_date_time: dlTimer.convertToLocal(ctx, res.data[0].pickupdate.toISOString()),
+                        dropoff_date_time: dlTimer.convertToLocal(ctx, res.data[0].dropoffdate.toISOString()),
+        
+                        price_per_date: res.data[0].priceperday,
+                        total_rental_days: res.data[0].totalrentaldays,
+                        vat: res.data[0].vatamount,
+                        total_cost: res.data[0].totalcost,
+                        deposit: res.data[0].deposit,
+                        coupon_value: res.data[0].couponvalue,
+        
+                        booking_user_name: carDetails[0].fullname,
+                        booking_user_contact_number: carDetails[0].contactnumber,
+                        booking_user_email: carDetails[0].email,
+                        booking_user_address: carDetails[0].address,
+        
+                        booking_agency_name: carDetails[0].agencyname,
+                        booking_agency_contact_number: carDetails[0].agencycontact,
+                        booking_agency_address: carDetails[0].agencyaddress,
+                        booking_agency_address_lat:carDetails[0].agentlat,
+                        booking_agency_address_lng:carDetails[0].agentlang,
+        
+                        receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
+                        receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
+                        receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
+                        showmap: carDetails[0].showmap == 1 ? true : false,
+        
+                        car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
+                        car_number: carDetails[0].carno,
+                        make: carDetails[0].carbrand,
+                        car_year: carDetails[0].caryear,
+                        car_model: carDetails[0].carmodel,
+        
+                        agency_name: AgencyEmail.agencyname,
+                        subject: ConstantsMailTemplate.AdminUserPaymentCarBookingSubject,
+                      };
+        
+                      dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminUserCarBooking, Constants.AdminMailId, replacements);
+        
+                      return this.requestSuccess("Payment Confirmation", res);
+                  });
+                });
+              })
+              .catch((err) => {
+                return this.requestError("Error has occured", err);
+              })
+            }
+          } else {
+            return this.requestSuccess("Payment Confirmation", bookRes);
+          }
+        } else {
+          return this.requestSuccess("Payment Confirmation", bookRes);
         }
-      ).then(async (res) => {
-        return this.requestSuccess("Payment Confirmation", "failure");
       })
       .catch((err) => {
         console.log(err);
         return this.requestError("Error has occured", err);
-      })
-    } else {
-      return Booking.updateBy(
-        ctx,
-        ctx.params.id,
-        {
-          paymentstatus: 1
-        },
-        {
-          query: { bookingcode: ctx.params.id },
-      }).then(async (res) => {
-        return User.findOne(ctx, {
-          query: { id: res.data[0].created_by },
-        }).then(async (ans) => {
-          return await sequelize12
-          .query("exec sp_GetBookingInformationByID_new @Id=:id, @Lang=:lang", {
-            replacements: { id: res.data[0].id, lang: 1 },
-            type: Sequ.QueryTypes.SELECT,
-          })
-          .then(async (carDetails) => {
-           const AgencyEmail = await AgentConfig.find(ctx, {
-                query: { id: res.data[0].agentid, status: 1 },
-              }).then((res) => {
-                return res.data[0];
-              });
-              
-              ctx.meta.log = "New booking added by user without coupon.";
-              let replacements = {
-                name: `${ans.data.firstname} ${ans.data.lastname}`,
-                booking_number: res.data[0].bookingcode,
-                booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
-                pickup_city: res.data[0].pickupplace,
-                dropoff_city: res.data[0].dropoffplace,
-                pickup_date_time: dlTimer.convertToLocal(ctx, res.data[0].pickupdate.toISOString()),
-                dropoff_date_time: dlTimer.convertToLocal(ctx, res.data[0].dropoffdate.toISOString()),
-                price_per_date: res.data[0].priceperday,
-                total_rental_days: res.data[0].totalrentaldays,
-                vat: res.data[0].vatamount,
-                total_cost: res.data[0].totalcost,
-                deposit: res.data[0].deposit,
-                coupon_value: res.data[0].couponvalue,
+      });
+  },
 
-                booking_user_name: carDetails[0].fullname,
-                booking_user_contact_number: carDetails[0].contactnumber,
-                booking_user_email: carDetails[0].email,
-                booking_user_address: carDetails[0].address,
+  booking_payment: async function (ctx) {
+    return Booking.find(ctx, { query: { bookingcode: ctx.params.id } })
+      .then(async(bookRes) => {
+        if (bookRes.data.length > 0 && bookRes.data[0].id) {
+          if(bookRes.data[0].paymentstatus == 2) {
+            
+            let bookingArr = {};
+            const totalCost = bookRes.data[0].totalcost;
+            const bookingCode = bookRes.data[0].bookingcode;
 
-                booking_agency_name: carDetails[0].agencyname,
-                booking_agency_contact_number: carDetails[0].agencycontact,
-                booking_agency_address: carDetails[0].agencyaddress,
-                booking_agency_address_lat:carDetails[0].agentlat,
-                booking_agency_address_lng:carDetails[0].agentlang,
+            // const clientIp = ctx.ip || ctx.connection.remoteAddress;
+            const clientIp = ctx.ip || '';
+            const txnDetails = "" + bookingCode + "|" + TERMINAL_ID + "|" + TERMINAL_PASSWORD + "|" + SECRET_KEY + "|" + totalCost + "|"+ DEFAULT_CURRENCY +"";
+            const txtSecretKey = crypto.createHash('sha256').update(txnDetails, 'utf8').digest('hex');
+            const userDetail = await User.findOne(ctx, { id: bookRes.data[0].created_by });
+            const PaymentData = {
+              "trackid": bookingCode,
+              "terminalId": TERMINAL_ID,
+              "password": TERMINAL_PASSWORD,
+              "action": 1,
+              "merchantIp": '127.0.0.1',
+              "country": DEFAULT_COUNTRY,
+              "amount": totalCost,
+              "requestHash": txtSecretKey,
+              "customerEmail" : userDetail.data.email ? userDetail.data.email : '',
+              //"customerEmail" : 'test@gmail.com',
+              "currency": DEFAULT_CURRENCY,
+              "udf1": bookingCode,
+              "udf2": PAYMENT_LINK + '?id=' + bookingCode,
+              "udf3": DEFAULT_COUNTRY,
+              "metaData":"{\"entryone\":\"A\",\"entrytwo\":\"J\",\"entrythree\":\"xyz\"}",
+            };
 
-                receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
-                receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
-                receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
-                showmap: carDetails[0].showmap == 1 ? true : false,
+            const paymentResponse = await axios.post(PAYMENT_URL, PaymentData);
+            const paymentRes = paymentResponse.data;
+            if(paymentRes.result != null && paymentRes.result != 'Successful') {
+              return this.requestError("Error has been occured", paymentRes);
+            } 
 
-                car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
-                car_number: carDetails[0].carno,
-                make: carDetails[0].carbrand,
-                car_year: carDetails[0].caryear,
-                car_model: carDetails[0].carmodel,
-
-                // car_image_path: 'https://api.drivelounge.com/' + res.data.imageurl,
-                // car_number: res.data.carid,
-                // make: res.data.make,
-                // car_year: res.data.caryear,
-                // car_model: res.data.dropoffplace,
-
-                subject: ConstantsMailTemplate.UserPaymentCarBookingSubject,
-              };
-
-              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserPaymentCarBooking, ans.data.email, replacements);
-
-              replacements = {
-                booking_number: res.data[0].bookingcode,
-                booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
-                pickup_city: res.data[0].pickupplace,
-                dropoff_city: res.data[0].dropoffplace,
-                pickup_date_time: dlTimer.convertToLocal(ctx, res.data[0].pickupdate.toISOString()),
-                dropoff_date_time: dlTimer.convertToLocal(ctx, res.data[0].dropoffdate.toISOString()),
-
-                price_per_date: res.data[0].priceperday,
-                total_rental_days: res.data[0].totalrentaldays,
-                vat: res.data[0].vatamount,
-                total_cost: res.data[0].totalcost,
-                deposit: res.data[0].deposit,
-                coupon_value: res.data[0].couponvalue,
-
-                booking_user_name: carDetails[0].fullname,
-                booking_user_contact_number: carDetails[0].contactnumber,
-                booking_user_email: carDetails[0].email,
-                booking_user_address: carDetails[0].address,
-
-                booking_agency_name: carDetails[0].agencyname,
-                booking_agency_contact_number: carDetails[0].agencycontact,
-                booking_agency_address: carDetails[0].agencyaddress,
-                booking_agency_address_lat:carDetails[0].agentlat,
-                booking_agency_address_lng:carDetails[0].agentlang,
-
-                receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
-                receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
-                receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
-                showmap: carDetails[0].showmap == 1 ? true : false,
-
-                car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
-                car_number: carDetails[0].carno,
-                make: carDetails[0].carbrand,
-                car_year: carDetails[0].caryear,
-                car_model: carDetails[0].carmodel,
-
-                agency_name: AgencyEmail.agencyname,
-                subject: ConstantsMailTemplate.AgencyUserPaymentCarBookingSubject,
-              };
-              
-              dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyUserPaymentCarBooking, AgencyEmail.email, replacements);
-
-              replacements = {
-                booking_number: res.data[0].bookingcode,
-                booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
-                pickup_city: res.data[0].pickupplace,
-                dropoff_city: res.data[0].dropoffplace,
-                pickup_date_time: dlTimer.convertToLocal(ctx, res.data[0].pickupdate.toISOString()),
-                dropoff_date_time: dlTimer.convertToLocal(ctx, res.data[0].dropoffdate.toISOString()),
-
-                price_per_date: res.data[0].priceperday,
-                total_rental_days: res.data[0].totalrentaldays,
-                vat: res.data[0].vatamount,
-                total_cost: res.data[0].totalcost,
-                deposit: res.data[0].deposit,
-                coupon_value: res.data[0].couponvalue,
-
-                booking_user_name: carDetails[0].fullname,
-                booking_user_contact_number: carDetails[0].contactnumber,
-                booking_user_email: carDetails[0].email,
-                booking_user_address: carDetails[0].address,
-
-                booking_agency_name: carDetails[0].agencyname,
-                booking_agency_contact_number: carDetails[0].agencycontact,
-                booking_agency_address: carDetails[0].agencyaddress,
-                booking_agency_address_lat:carDetails[0].agentlat,
-                booking_agency_address_lng:carDetails[0].agentlang,
-
-                receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
-                receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
-                receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
-                showmap: carDetails[0].showmap == 1 ? true : false,
-
-                car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
-                car_number: carDetails[0].carno,
-                make: carDetails[0].carbrand,
-                car_year: carDetails[0].caryear,
-                car_model: carDetails[0].carmodel,
-
-                agency_name: AgencyEmail.agencyname,
-                subject: ConstantsMailTemplate.AdminUserPaymentCarBookingSubject,
-              };
-
-              dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminUserCarBooking, Constants.AdminMailId, replacements);
-
-              return this.requestSuccess("Payment Confirmation", res);
-          });
-        });
+            bookingArr.paymenttransactionid = paymentRes.payid;
+            bookingArr.paymenttransactionjson = JSON.stringify(paymentRes);
+            
+            return Booking.updateBy(
+              ctx,
+              ctx.params.id,
+              bookingArr,
+              {
+                query: { bookingcode: ctx.params.id },
+              }
+            )
+            .then((book) => {
+              return this.requestSuccess("Booking Payment", book);
+            }).catch((err) => {
+              return this.requestError("Booking Payment", err);
+            });
+          } else {
+            return this.requestError("Booking Payment", bookRes);
+          }
+        } else {
+          return this.requestError("Booking Payment", bookRes);
+        }
       })
       .catch((err) => {
+        console.log(err);
         return this.requestError("Error has occured", err);
-      })
-    }
+      });
   },
 
   getbookingdates: function (ctx) {

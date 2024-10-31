@@ -127,6 +127,10 @@ module.exports = {
             handler: BookingController.confirmation,
         },
 
+        booking_payment: {
+            handler: BookingController.booking_payment,
+        },
+
         remove: {
             params: BookingValidator.remove,
             handler: BookingController.remove,
