@@ -14,6 +14,7 @@ module.exports = {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const responseData = await response.json();
+        console.log(responseData); 
         ctx.meta.log = `Message sent to ${recipients} successfully`;
         activity.setLog(ctx);
         return responseData;

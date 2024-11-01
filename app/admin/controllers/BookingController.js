@@ -2748,7 +2748,7 @@ module.exports = {
     return Booking.find(ctx, { query: { bookingcode: ctx.params.id } })
       .then((bookRes) => {
         if (bookRes.data.length > 0 && bookRes.data[0].id) {
-          if(bookRes.data[0].paymentstatus == 0) {
+          if(bookRes.data[0].paymentstatus == 0 || bookRes.data[0].paymentstatus == 2) {
             if(ctx.params.result == 'Failure') {
               return Booking.updateBy(ctx,
                 ctx.params.id,

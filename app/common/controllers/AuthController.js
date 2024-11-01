@@ -173,7 +173,8 @@ module.exports = {
                         alphabets: false,
                     });
 
-                    otp = 1234;
+                    //otp = 1234;
+                    otp = Math.floor(1000 + Math.random() * 9000);
                     const otpRef = Math.random().toString(36).substring(2, 24);
                     
                     dlSMS.sendSMS(ctx, res.data.contactnumber.replace(/\D/g, ""), "Your OTP number is: " + otp);
