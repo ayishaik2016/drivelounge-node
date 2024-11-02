@@ -1938,7 +1938,7 @@ module.exports = {
             const paymentResponse = await axios.post(PAYMENT_URL, PaymentData);
             const paymentRes = paymentResponse.data;
             if(paymentRes.result != null && paymentRes.result != 'Successful') {
-              return this.requestError("Error has been occured", paymentRes);
+              return this.requestError("Payment failed", paymentRes);
             } 
 
             bookingArr.paymenttransactionid = paymentRes.payid;
@@ -2981,7 +2981,7 @@ module.exports = {
             const paymentResponse = await axios.post(PAYMENT_URL, PaymentData);
             const paymentRes = paymentResponse.data;
             if(paymentRes.result != null && paymentRes.result != 'Successful') {
-              return this.requestError("Error has been occured", paymentRes);
+              return this.requestError("Payment failed", paymentRes);
             } 
 
             bookingArr.paymenttransactionid = paymentRes.payid;
