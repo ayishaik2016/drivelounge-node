@@ -1881,11 +1881,12 @@ module.exports = {
             bookingstatus: ctx.params.status,
             usertype: ctx.params.usertype,  
           }
-          
+
           if(ctx.params.status == 0) {
             let cancelationdays = 0;
             let cancelationcharges = 0;
             let cancelationtotalamount = 0;
+            const bookingCode = res.data[0].bookingcode;
 
             const pickupDate = new Date(res.data[0].pickupdate);
             const currentDate = new Date();
@@ -1900,6 +1901,36 @@ module.exports = {
               cancelationcharges = cancelationdays * priceperday;
               cancelationtotalamount = cancelationcharges * (vatpercent/100);
             }
+
+            
+            const refundTotalCost = res.data[0].totalcost - cancelationtotalamount; 
+            const clientIp = ctx.ip || '';
+            const txnDetails = "" + bookingCode + "|" + TERMINAL_ID + "|" + TERMINAL_PASSWORD + "|" + SECRET_KEY + "|" + refundTotalCost + "|"+ DEFAULT_CURRENCY +"";
+            const txtSecretKey = crypto.createHash('sha256').update(txnDetails, 'utf8').digest('hex');
+            const userDetail = await User.findOne(ctx, { query: { id: res.data[0].created_by }});
+            const PaymentData = {
+              "trackid": bookingCode,
+              "terminalId": TERMINAL_ID,
+              "password": TERMINAL_PASSWORD,
+              "action": 2,
+              "merchantIp": "127.0.0.1",
+              "country": DEFAULT_COUNTRY,
+              "amount": refundTotalCost,
+              "requestHash": txtSecretKey,
+              "customerEmail" : userDetail.data.email,
+              "currency": DEFAULT_CURRENCY,
+              "udf1": bookingCode,
+              "udf2": PAYMENT_LINK + '?id=' + bookingCode,
+              "udf3": DEFAULT_COUNTRY,
+              "metaData":"{\"entryone\":\"A\",\"entrytwo\":\"J\",\"entrythree\":\"xyz\"}",
+              "transid": res.data[0].paymenttransactionid
+            };
+
+            const paymentResponse = await axios.post(PAYMENT_URL, PaymentData);
+            const paymentRes = paymentResponse.data;
+            if(paymentRes.result != null && paymentRes.result != 'Successful') {
+              return this.requestError("Refund failed", paymentRes);
+            } 
 
             bookingArr.paymentstatus = 3;
             bookingArr.cancellationreason = reason;
@@ -1916,7 +1947,7 @@ module.exports = {
             const clientIp = ctx.ip || '';
             const txnDetails = "" + bookingCode + "|" + TERMINAL_ID + "|" + TERMINAL_PASSWORD + "|" + SECRET_KEY + "|" + totalCost + "|"+ DEFAULT_CURRENCY +"";
             const txtSecretKey = crypto.createHash('sha256').update(txnDetails, 'utf8').digest('hex');
-            const userDetail = await User.findOne(ctx, { id: res.data[0].created_by });
+            const userDetail = await User.findOne(ctx, { query: { id: res.data[0].created_by }});
             const PaymentData = {
               "trackid": bookingCode,
               "terminalId": TERMINAL_ID,
@@ -1927,7 +1958,7 @@ module.exports = {
               "amount": totalCost,
               "requestHash": txtSecretKey,
               // "customerEmail" : userDetail.data[0].email ? userDetail.data[0].email : '',
-              "customerEmail" : 'test@gmail.com',
+              "customerEmail" : userDetail.data.email,
               "currency": DEFAULT_CURRENCY,
               "udf1": bookingCode,
               "udf2": PAYMENT_LINK + '?id=' + bookingCode,
