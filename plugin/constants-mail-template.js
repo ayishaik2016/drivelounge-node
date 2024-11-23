@@ -64,4 +64,8 @@ module.exports = {
     UserUserPasswordResetSubject: 'Password Reset',
     UserUserPasswordResetConfirmation: 'UserUserPasswordResetConfirmation.html',
     UserUserPasswordResetConfirmationSubject: 'Password Reset',
+    UserUserChangePassword: 'UserUserPasswordReset.html',
+    UserUserChangePasswordSubject: 'Password Reset',
+    UserAgencyChangePassword: 'AgencyUserChangePassword.html',
+    UserAgencyChangePasswordSubject: 'Password Reset',
 };

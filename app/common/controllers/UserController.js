@@ -1007,14 +1007,20 @@ module.exports = {
           // .then(() =>
           this.generateHash(ctx.params.newpassword)
         )
-        .then((res) => {
-          if (
-            ctx.params.newpassword.localeCompare(ctx.params.confirmpassword) ==
-            0
-          ) {
+        .then(async(res) => {
+          if (ctx.params.newpassword.localeCompare(ctx.params.confirmpassword) == 0) {
+            const userDetail = await User.findOne(ctx, { query: { id: ctx.params.id }});
             User.updateById(ctx, ctx.params.id, {
               password: res.data,
             });
+
+            let replacements = {
+              name: userDetail.data.firstname + " " + userDetail.data.lastname,
+              subject: ConstantsMailTemplate.UserUserChangePasswordSubject,
+            };
+
+            dlMailer.sendMail(ctx, ConstantsMailTemplate.UserUserChangePassword, userDetail.data.email, replacements, Constants.AdminMailId);
+
             ctx.meta.log = "Password changed";
             activity.setLog(ctx);
           } else {
@@ -1494,7 +1500,6 @@ module.exports = {
   },
 
   agent_changePassword: function (ctx) {
-    console.log(ctx.params);
     // activity.getAgent(ctx,ctx.params.id).then((res) =>{
     // 	ctx.meta.username = res.data.email;
     // 	// console.log(activityData);
@@ -1508,16 +1513,21 @@ module.exports = {
             newpassword: ctx.params.newpassword,
           })
         )
-        .then((res) => {
-          if (
-            ctx.params.newpassword.localeCompare(ctx.params.confirmpassword) ==
-            0
-          ) {
-            this.generateHash(ctx.params.newpassword).then((res) => {
-              console.log(res);
+        .then(async(res) => {
+          if (ctx.params.newpassword.localeCompare(ctx.params.confirmpassword) == 0) {
+            this.generateHash(ctx.params.newpassword).then(async(res) => {
+              const AgentDetail = await Agent.findOne(ctx, { query: { id: ctx.params.id }});
               Agent.updateById(ctx, ctx.meta.user.id, {
                 password: res.data,
               });
+
+              let replacements = {
+                name: AgentDetail.data.firstname + " " + AgentDetail.data.lastname,
+                subject: ConstantsMailTemplate.UserAgencyChangePasswordSubject,
+              };
+
+              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAgencyChangePassword, AgentDetail.data.email, replacements, Constants.AdminMailId);
+
               ctx.meta.log = "Password changed";
               activity.setLog(ctx);
             });
@@ -1597,15 +1607,16 @@ module.exports = {
                   ? "Agency approval"
                   : "Agency rejected";
               activity.setLog(ctx);
-
-
-              var mailTemplateName = ConstantsMailTemplate.AgencyAgencyRegistrationApproval;
-              let replacements = {
-                agency_name: response.data[0].agencyname,
-                subject: ConstantsMailTemplate.AgencyAgencyRegistrationApprovalSubject, 
-              };
-
+ 
+              let replacements = {};
+              let mailTemplateName = '';
               if(ctx.params.agentstatus == 1) {
+                replacements = {
+                  agency_name: response.data[0].agencyname,
+                  subject: ConstantsMailTemplate.AgencyAgencyRegistrationApprovalSubject, 
+                };
+
+                mailTemplateName = ConstantsMailTemplate.AgencyAgencyRegistrationApproval;
               } else {
                 Tokens.removeMany(ctx, {
                   userId: ctx.params.id,
@@ -1620,8 +1631,7 @@ module.exports = {
                 mailTemplateName = ConstantsMailTemplate.AgencyAgencyRegistrationRejection;
               }
 
-              dlMailer.sendMail(ctx, mailTemplateName, response.data[0].email, replacements);
-
+              dlMailer.sendMail(ctx, mailTemplateName, response.data[0].email, replacements, Constants.AdminMailId);
 
               /*
               let readHTMLFile = function (path, callback) {

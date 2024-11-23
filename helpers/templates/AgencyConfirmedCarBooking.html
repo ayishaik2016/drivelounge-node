@@ -5,7 +5,7 @@
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
-      <title>Booking Successfully</title>
+      <title>Booking confirmation - Booking Number {{booking_number}}</title>
       <style>
          body{ margin:0px; padding: 0px; height: 100%;}
          html{ height: 100%; }
@@ -43,7 +43,10 @@
                                              color: #545454;
                                              margin: 0;
                                              margin-bottom: 20px;
-                                             line-height: 1.6;">You have confirmed this booking, and a booking confirmation email was sent to the Customer.</p>
+                                             line-height: 1.6;">You have approved this booking, and a booking confirmation email was sent to the Customerto complete the payment process within 24 hours.<br><br>
+											 
+											 In case, the payment process not completed within 24 hours, the booking request will be canceled automatically.</p>
+											 <br />
 											 <br />
 											 <p style=" font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">Thanks,</p>
 											 <p style=" font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">Drive Lounge</p>
@@ -54,14 +57,15 @@
 												margin: 0;
 												margin-bottom: 20px;
 												text-align:right;
-												line-height: 1.6;">
-   تم تأكيد الحجز من قبلكم وتم ارسال بريد الكتروني للعميل بتفاصيل الحجز المؤكد.
-   </p>
+												line-height: 1.6;">تم قبول الحجز من قبلكم وتم ارسال بريد الكتروني للعميل لإكمال عملية الدفع خلال 24 ساعة
+													<br><br>
+													في حال لم يتم اكمال عملية الدفع من قبل العميل خلال 24 ساعة سوف يتم الغاء الطالب تلقائياً. 
+												</p>
    										<br />
                                           <p style="text-align:right;font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">مع تحیات</p>
                                           <p style="text-align:right;font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">درايف لاونج</p>
 
-											 <table cellpadding="0" style="border-collapse: separate;border-spacing: 0 1em;" width="100%">
+											 <!--<table cellpadding="0" style="border-collapse: separate;border-spacing: 0 1em;" width="100%">
 												<tr>
 													<td style="width:20%;background-color: #ffffff;">&nbsp;</td>
 													<td style="width:25%;background-color: #ffffff;">&nbsp;</td>
@@ -288,8 +292,7 @@
 		 </td>
 	 </tr>
 	 {{/if}}
-											</table>
-
+											</table>-->
 
                                        </td>
                                     </tr>

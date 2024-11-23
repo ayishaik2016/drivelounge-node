@@ -19,6 +19,7 @@ module.exports = {
 	USERS_FORBIDDEN_REMOVE: "Forbidden Remove",
 	USERS_INVALID_ROLE: "Invalid Role",
 	USERS_PASSWORD_MATCH: "Passwords does not match",
+	USERS_PASSWORD_NOT_SAME: "Password should not same as old password",
 	USERS_VERIFICATION: "Verification_Pending",
 	// Errors on Auth
 	AUTH_INVALID_CREDENTIALS: "Invalid Credentials",

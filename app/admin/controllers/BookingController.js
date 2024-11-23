@@ -23,6 +23,7 @@ const dlTimer = require("../../../helpers/DLTimer");
 
 const Sequ = require("sequelize");
 const { QueryTypes } = require("sequelize");
+const constants = require("../../../plugin/constants");
 let config = Config.get('/mssqlEnvironment');
 const sequelize12 = new Sequ(config.database, config.username, config.password, {
   host: config.host,
@@ -230,7 +231,7 @@ module.exports = {
                     subject: ConstantsMailTemplate.UserUserCarBookingSubject,
                   };
 
-                  dlMailer.sendMail(ctx, ConstantsMailTemplate.UserUserCarBooking, ans.data.email, replacements);
+                  dlMailer.sendMail(ctx, ConstantsMailTemplate.UserUserCarBooking, ans.data.email, replacements, Constants.AdminMailId);
 
                   replacements = {
                     booking_number: res.data.bookingcode,
@@ -273,8 +274,9 @@ module.exports = {
                     subject: ConstantsMailTemplate.AgencyUserCarBookingSubject,
                   };
 
-                  dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyUserCarBooking, AgencyEmail[0].email, replacements);
+                  dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyUserCarBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
 
+                  /*
                   replacements = {
                     booking_number: res.data.bookingcode,
                     booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
@@ -317,7 +319,7 @@ module.exports = {
                   };
 
                   dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminUserCarBooking, Constants.AdminMailId, replacements);
-
+                  */
                   return this.requestSuccess("Car reserved", _res);
                 });
               });
@@ -2057,9 +2059,9 @@ module.exports = {
                         subject: ConstantsMailTemplate.UserConfirmedCarBookingSubject,
                         paymentLink: paymentLink
                       };
-                      dlMailer.sendMail(ctx, ConstantsMailTemplate.UserConfirmedCarBooking, user.data.email, replacements);
+                      dlMailer.sendMail(ctx, ConstantsMailTemplate.UserConfirmedCarBooking, user.data.email, replacements, Constants.AdminMailId);
 
-                      replacements = {
+                      /*replacements = {
                         name: user.data.firstname + " " + user.data.lastname,
                         booking_number: book.data[0].bookingcode,
                         booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
@@ -2100,7 +2102,7 @@ module.exports = {
                         agency_name: AgencyEmail[0].agencyname,
                         subject: ConstantsMailTemplate.AdminConfirmedCarBookingSubject,
                       };
-                      dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminConfirmedCarBooking, Constants.AdminMailId, replacements);
+                      dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminConfirmedCarBooking, Constants.AdminMailId, replacements);*/
 
                       replacements = {
                         booking_number: book.data[0].bookingcode,
@@ -2143,7 +2145,7 @@ module.exports = {
                         agency_name: AgencyEmail[0].agencyname,
                         subject: ConstantsMailTemplate.AgencyConfirmedCarBookingSubject,
                       };
-                      dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyConfirmedCarBooking, AgencyEmail[0].email, replacements);
+                      dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyConfirmedCarBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
                     }
                     if (ctx.params.status == 3) {
 
@@ -2189,7 +2191,7 @@ module.exports = {
                         agency_name: AgencyEmail[0].agencyname,
                         subject: ConstantsMailTemplate.UserCompletedCarBookingSubject,
                       };
-                      dlMailer.sendMail(ctx, ConstantsMailTemplate.UserCompletedCarBooking, user.data.email, replacements);
+                      dlMailer.sendMail(ctx, ConstantsMailTemplate.UserCompletedCarBooking, user.data.email, replacements, Constants.AdminMailId);
 
                       replacements = {
                         booking_number: book.data[0].bookingcode,
@@ -2275,7 +2277,7 @@ module.exports = {
                         agency_name: AgencyEmail[0].agencyname,
                         subject: ConstantsMailTemplate.AgencyCompletedCarBookingSubject,
                       };
-                      dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyCompletedCarBooking, AgencyEmail[0].email, replacements);
+                      dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyCompletedCarBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
 
 
 
