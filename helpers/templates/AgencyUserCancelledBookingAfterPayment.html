@@ -5,7 +5,7 @@
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
-      <title>Payment Successfully</title>
+      <title>Booking Cancelled</title>
       <style>
          body{ margin:0px; padding: 0px; height: 100%;}
          html{ height: 100%; }
@@ -38,30 +38,30 @@
                                  <tbody>
                                     <tr>
                                        <td>
-                                          <h2 style="margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">Dear Admin,</h2>
+                                          <h2 style="margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">Dear {{user_name}},</h2>
+                                          <p style="font-size: 16px;
+                                             color: #545454;
+                                             margin: 0;
+                                             margin-bottom: 20px;
+                                             line-height: 1.6;">We regret to inform you that Your booking number {{booking_number}} has been cancelled due to circumstances arising in the Agency.The cancelation policy will be applied on this request. 
+                                             <br /><br />
+											 
+											 <p style=" font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">Thanks,</p>
+											 <p style=" font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">Drive Lounge</p>
+
+											 <h2 style="padding-top:30px;text-align:right;margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">{{user_name}} السادة</h2>
                                           <p style="    font-size: 16px;
                                              color: #545454;
                                              margin: 0;
                                              margin-bottom: 20px;
-                                             line-height: 1.6;">The payment process for this booking has been completed successfully. <br>You can now contact with the customer to complete the pick-up process as agreed. </p>
-											 <br />
-                                             <p style=" font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">Thanks,</p>
-                                             <p style=" font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">Drive Lounge</p>
-
-                                             <h2 style="text-align:right;margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">Admin السادة</h2>
-											 <p style="    font-size: 16px;
-                                             color: #545454;
-                                             margin: 0;
-                                             margin-bottom: 20px;
                                              text-align:right;
-                                             line-height: 1.6;"> اكتمال عملية الدفع لهذا الحجز بنجاح.
-											<br>
-											يمكنك الأن التواصل مع العميل لتسليم المركبة في الوقت والمكان المحددالمتفق علية. 
-											</p>
-											 <br />
-											 <p style="text-align:right;font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">مع تحیات</p>
-											 <p style="text-align:right;font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">درايف لاونج</p>
-                                        </td>
+                                             line-height: 1.6;">
+                                             يؤسفنا إبلاغك بأنه تم الغاء طلب الحجز رقم {{booking_number}} من قبل مكتب التأجير لأسباب راجعة للمكتب،وعلى ذلك سوف يتم تطبيق سياسة الغاء الحجوزات على هذا الطلب
+                                             </p>
+
+                                          <p style="text-align:right;font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">مع تحیات</p>
+                                          <p style="text-align:right;font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">درايف لاونج</p>
+                                       </td>
                                     </tr>
                                     <tr>
                                        <td height="30"></td>

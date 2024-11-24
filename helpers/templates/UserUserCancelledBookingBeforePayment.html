@@ -5,7 +5,7 @@
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
-      <title>Payment Successfully</title>
+      <title>Booking Cancelled</title>
       <style>
          body{ margin:0px; padding: 0px; height: 100%;}
          html{ height: 100%; }
@@ -38,30 +38,32 @@
                                  <tbody>
                                     <tr>
                                        <td>
-                                          <h2 style="margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">Dear Admin,</h2>
+                                          <h2 style="margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">Dear {{user_name}},</h2>
                                           <p style="    font-size: 16px;
                                              color: #545454;
                                              margin: 0;
                                              margin-bottom: 20px;
-                                             line-height: 1.6;">The payment process for this booking has been completed successfully. <br>You can now contact with the customer to complete the pick-up process as agreed. </p>
-											 <br />
+                                             line-height: 1.6;">Your booking has been cancelled based on your request, all the amounts which you paid in the website will be refunded within a maximum period of 14 days. 
+                                              <br><br>
+                                             If you have any question, please contact with Drive lounge support team or read the cancelation policy. 
+                                             <br><br>
                                              <p style=" font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">Thanks,</p>
                                              <p style=" font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">Drive Lounge</p>
 
-                                             <h2 style="text-align:right;margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">Admin السادة</h2>
-											 <p style="    font-size: 16px;
+											 <h2 style="padding-top:30px;text-align:right;margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">{{user_name}} السادة</h2>
+                                          <p style="    font-size: 16px;
                                              color: #545454;
                                              margin: 0;
                                              margin-bottom: 20px;
                                              text-align:right;
-                                             line-height: 1.6;"> اكتمال عملية الدفع لهذا الحجز بنجاح.
-											<br>
-											يمكنك الأن التواصل مع العميل لتسليم المركبة في الوقت والمكان المحددالمتفق علية. 
+                                             line-height: 1.6;">تم الغاء طلب الحجز بناءً على رغبتكم، سوف يتم ارجاع المبالغ المدفوعة في الموقع في فترة اقصاها 14 يوم
+											 <br><br>
+                                  في حال لديكم اي استفسار يرجىالتواصل مع فريق دعم درايف لاونج او مراجعة سياسة الغاء الحجوزات
 											</p>
-											 <br />
-											 <p style="text-align:right;font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">مع تحیات</p>
-											 <p style="text-align:right;font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">درايف لاونج</p>
-                                        </td>
+
+                                          <p style="text-align:right;font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">مع تحیات</p>
+                                          <p style="text-align:right;font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">درايف لاونج</p>
+                                       </td>
                                     </tr>
                                     <tr>
                                        <td height="30"></td>
