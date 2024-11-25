@@ -154,6 +154,16 @@ module.exports = {
         earnings_list: {
             params: BookingValidator.earnings_list,
             handler: BookingController.earnings_list,
+        },
+
+        updatecancelbooking: {
+            params: BookingValidator.update_cancel_booking,
+            handler: BookingController.update_cancel_booking,
+        },
+
+        updatepaymentcancelbooking: {
+            params: BookingValidator.update_payment_cancel_booking,
+            handler: BookingController.update_payment_cancel_booking,
         }
     },
 

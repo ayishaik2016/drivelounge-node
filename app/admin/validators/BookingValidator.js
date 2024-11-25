@@ -48,6 +48,12 @@ module.exports = {
     earnings_list: {
         customerid: "string"
     },
+    update_cancel_booking: {
+        
+    },
+    update_payment_cancel_booking: {
+        
+    }
     // notification_count: {
     //     hotelid: {type: "string", min: 1,required: true},
     // }

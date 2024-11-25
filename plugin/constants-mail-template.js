@@ -103,4 +103,18 @@ module.exports = {
     AdminUserCancelledBooking: 'AdminUserCancelledBooking.html',
     AdminAgencyCancelledBooking: 'AdminAgencyCancelledBooking.html',
     AdminAdminCancelledBooking: 'AdminAdminCancelledBooking.html',
+
+    AgentUserAutoCancelledBookingSubject: 'Auto Booking Cancellation - Booking Number {{booking_number}}',
+    AgentAgencyAutoCancelledBookingSubject: 'Auto Booking Cancellation - Booking Number {{booking_number}}',
+    AgentAdminAutoCancelledBookingSubject: 'Auto Booking Cancellation - Booking Number {{booking_number}}',
+    AgentUserAutoCancelledBooking: 'AgentUserAutoCancelledBooking.html',
+    AgentAgencyAutoCancelledBooking: 'AgentAgencyAutoCancelledBooking.html',
+    AgentAdminAutoCancelledBooking: 'AgentAdminAutoCancelledBooking.html',
+
+    UserUserAutoCancelledBookingSubject: 'Auto Booking Cancellation - Booking Number {{booking_number}}',
+    UserAgencyAutoCancelledBookingSubject: 'Auto Booking Cancellation - Booking Number {{booking_number}}',
+    UserAdminAutoCancelledBookingSubject: 'Auto Booking Cancellation - Booking Number {{booking_number}}',
+    UserUserAutoCancelledBooking: 'UserUserAutoCancelledBooking.html',
+    UserAgencyAutoCancelledBooking: 'UserAgencyAutoCancelledBooking.html',
+    UserAdminAutoCancelledBooking: 'UserAdminAutoCancelledBooking.html',
 };

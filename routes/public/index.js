@@ -219,5 +219,9 @@ module.exports = {
         "GET contactus/get": "contactus.get",
         "PUT contactus/update": "contactus.update",
         "DELETE contactus/delete": "contactus.remove",
+
+        // booking api's
+        "GET cron/updatebooking": "booking.updatecancelbooking",
+        "GET cron/updatepaymentcancelbooking": "booking.updatepaymentcancelbooking",
     }
 }

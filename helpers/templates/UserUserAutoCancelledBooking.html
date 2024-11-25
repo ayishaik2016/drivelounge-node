@@ -5,7 +5,7 @@
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
-      <title>Booking Completed - Booking Number {{booking_number}}</title>
+      <title>Booking Cancelled</title>
       <style>
          body{ margin:0px; padding: 0px; height: 100%;}
          html{ height: 100%; }
@@ -38,23 +38,33 @@
                                  <tbody>
                                     <tr>
                                        <td>
-                                          <h2 style="margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">Dear {{agency_name}},</h2>
+                                          <h2 style="margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">Dear {{user_name}},</h2>
                                           <p style="    font-size: 16px;
                                              color: #545454;
                                              margin: 0;
                                              margin-bottom: 20px;
-                                             line-height: 1.6;">This is to confirm that the booking number {{booking_number}} was completed.
+                                             line-height: 1.6;">We regret to inform you that your request number {{booking_number}} has been automatically canceled as you have not completed the payment process within 24 hours.
                                              <br /><br />
-											 <h2 style="padding-top:30px;text-align:right;margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">{{agency_name}} السادة</h2>
+                                             You may sign in to your account and explore other alternative cars.
+                                          </p>
+											 
+											 <p style=" font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">Thanks,</p>
+											 <p style=" font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">Drive Lounge</p>
+
+											 <h2 style="padding-top:30px;text-align:right;margin: 0;font-size: 18px;color: #04242b;margin-bottom: 20px;">{{user_name}} السادة</h2>
                                           <p style="    font-size: 16px;
                                              color: #545454;
                                              margin: 0;
                                              margin-bottom: 20px;
                                              text-align:right;
-                                             line-height: 1.6;">هذا للتأكيد بأن الحجزك رقم {{booking_nubmer}} قد اكتمل</p>
-                                        
-                                          <p style=" font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">Thanks,</p>
-                                          <p style=" font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">Drive Lounge</p>
+                                             line-height: 1.6;">
+                                             يؤسفنا ابلاغك بإنه تم الغاء الطلب رقم {{booking_number}} تلقائيا لعدم اكمال عملية الدفع خلال 24 ساعة
+                                             <br /><br />
+                                             يمكنك تسجيل الدخول لحسابك واستكشاف سيارات بديلة 
+                                          </p>
+
+                                          <p style="text-align:right;font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">مع تحیات</p>
+                                          <p style="text-align:right;font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">درايف لاونج</p>
                                        </td>
                                     </tr>
                                     <tr>

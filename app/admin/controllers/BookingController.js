@@ -1977,6 +1977,7 @@ module.exports = {
 
             bookingArr.paymenttransactionid = paymentRes.payid;
             bookingArr.paymenttransactionjson = JSON.stringify(paymentRes);
+            bookingArr.paymenttransactiondate = new Date();
           }
 
           return Booking.updateBy(
@@ -2105,7 +2106,7 @@ module.exports = {
 
                       replacements = {
                         booking_number: book.data[0].bookingcode,
-                        booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+                        booking_date: dlTimer.convertToLocal(ctx, book.data[0].bookingdate.toISOString()),
                         pickup_city: book.data[0].pickupplace,
                         dropoff_city: book.data[0].dropoffplace,
                         pickup_date_time: dlTimer.convertToLocal(ctx, book.data[0].pickupdate.toISOString()),
@@ -2150,7 +2151,7 @@ module.exports = {
                     if (ctx.params.status == 3) {
                       let replacements = {
                         booking_number: book.data[0].bookingcode,
-                        booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+                        booking_date: dlTimer.convertToLocal(ctx, book.data[0].bookingdate.toISOString()),
                         pickup_city: book.data[0].pickupplace,
                         dropoff_city: book.data[0].dropoffplace,
                         pickup_date_time: dlTimer.convertToLocal(ctx, book.data[0].pickupdate.toISOString()),
@@ -2194,7 +2195,7 @@ module.exports = {
 
                       replacements = {
                         booking_number: book.data[0].bookingcode,
-                        booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+                        booking_date: dlTimer.convertToLocal(ctx, book.data[0].bookingdate.toISOString()),
                         pickup_city: book.data[0].pickupplace,
                         dropoff_city: book.data[0].dropoffplace,
                         pickup_date_time: dlTimer.convertToLocal(ctx, book.data[0].pickupdate.toISOString()),
@@ -2288,7 +2289,7 @@ module.exports = {
                           let replacements = {
                             booking_number: book.data[0].bookingcode,
                             reason: reason,
-                            booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+                            booking_date: dlTimer.convertToLocal(ctx, book.data[0].bookingdate.toISOString()),
                             user_name: user.data.firstname + " " + user.data.lastname,
                             agency_name: AgencyEmail[0].agencyname,
                             subject: ConstantsMailTemplate.AdminUserCancelledBookingSubject,
@@ -2304,7 +2305,7 @@ module.exports = {
                             let replacements = {
                               booking_number: book.data[0].bookingcode,
                               reason: reason,
-                              booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+                              booking_date: dlTimer.convertToLocal(ctx, book.data[0].bookingdate.toISOString()),
                               user_name: user.data.firstname + " " + user.data.lastname,
                               agency_name: AgencyEmail[0].agencyname,
                               subject: ConstantsMailTemplate.AgencyUserCancelledBookingAfterPaymentSubject,
@@ -2319,7 +2320,7 @@ module.exports = {
                             let replacements = {
                               booking_number: book.data[0].bookingcode,
                               reason: reason,
-                              booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+                              booking_date: dlTimer.convertToLocal(ctx, book.data[0].bookingdate.toISOString()),
                               user_name: user.data.firstname + " " + user.data.lastname,
                               agency_name: AgencyEmail[0].agencyname,
                               subject: ConstantsMailTemplate.AgencyUserCancelledBookingBeforePaymentSubject,
@@ -2340,7 +2341,7 @@ module.exports = {
                               let replacements = {
                                 booking_number: book.data[0].bookingcode,
                                 reason: reason,
-                                booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+                                booking_date: dlTimer.convertToLocal(ctx, book.data[0].bookingdate.toISOString()),
                                 user_name: user.data.firstname + " " + user.data.lastname,
                                 agency_name: AgencyEmail[0].agencyname,
                                 subject: ConstantsMailTemplate.UserUserCancelledBookingAfterPaymentSubject,
@@ -2355,7 +2356,7 @@ module.exports = {
                               let replacements = {
                                 booking_number: book.data[0].bookingcode,
                                 reason: reason,
-                                booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
+                                booking_date: dlTimer.convertToLocal(ctx, book.data[0].bookingdate.toISOString()),
                                 user_name: user.data.firstname + " " + user.data.lastname,
                                 agency_name: AgencyEmail[0].agencyname,
                                 subject: ConstantsMailTemplate.UserUserCancelledBookingBeforePaymentSubject,
@@ -2896,6 +2897,118 @@ module.exports = {
     earnings_obj["Total Earnings list"] = playersList1;
 
     return this.requestSuccess("Total Earnings", earnings_obj);
+  },
+
+  update_cancel_booking: async function(ctx) {
+    return Booking.find(ctx, { query: { bookingstatus:  2} })
+    .then(async(res) => {
+      const bookRes = res.data;
+      if(bookRes.length > 0) {
+        for(let i = 0; i < bookRes.length; i++) {
+          const pickupDate = new Date(bookRes[i].pickupdate);
+          const currentDate = new Date();
+          
+          const timeDifference = pickupDate - currentDate;
+          const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+          if(daysDifference <= 1) {
+            await Booking.updateBy(ctx, bookRes[i].id, 
+              {
+                bookingstatus: 0,
+                paymentstatus: 3
+              },
+              {
+                query: { id: bookRes[i].id },
+              }
+            );
+
+            const userDetail = User.findOne(ctx, { query: { id: bookRes[i].created_by } });
+
+            const AgencyEmail = await AgentConfig.find(ctx, { query: { id: bookRes[i].agentid, status: 1 },
+            }).then((agentRes) => {
+              return agentRes.data[0];
+            });
+
+            let replacements = {
+              booking_number: bookRes[i].bookingcode,
+              reason: reason,
+              booking_date: dlTimer.convertToLocal(ctx, bookRes[i].bookingdate.toISOString()),
+              user_name: userDetail.data.firstname + " " + userDetail.data.lastname,
+              agency_name: AgencyEmail[0].agencyname,
+              subject: ConstantsMailTemplate.AgentUserAutoCancelledBookingSubject,
+              subject: ConstantsMailTemplate.AgentAgencyAutoCancelledBookingSubject,
+              subject: ConstantsMailTemplate.AgentAdminAutoCancelledBookingSubject,
+            };
+
+            dlMailer.sendMail(ctx, ConstantsMailTemplate.AgentUserAutoCancelledBooking, userDetail.data.email, replacements, Constants.AdminMailId);
+            dlMailer.sendMail(ctx, ConstantsMailTemplate.AgentAgencyAutoCancelledBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
+            dlMailer.sendMail(ctx, ConstantsMailTemplate.AgentAdminAutoCancelledBooking, Constants.AdminMailId, replacements);
+          }
+        }
+      }
+
+      return this.requestSuccess("Cancel booking update", res);
+    })
+    .catch((err) => {
+      console.log(err);
+      return this.requestError("Error has occured", err);
+    });
+  },
+
+  update_payment_cancel_booking: async function(ctx) {
+    return Booking.find(ctx, { query: { bookingstatus:  1} })
+    .then(async(res) => {
+      const bookRes = res.data;
+      if(bookRes.length > 0) {
+        for(let i = 0; i < bookRes.length; i++) {
+          if(bookRes[i].paymentstatus == 0 || bookRes[i].paymentstatus == 2) {
+            const paymentTransactionDate = new Date(bookRes[i].paymenttransactiondate);
+            const currentDate = new Date();
+            
+            const timeDifference = paymentTransactionDate - currentDate;
+            const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+            if(daysDifference <= 1) {
+              await Booking.updateBy(ctx, bookRes[i].id, 
+                {
+                  bookingstatus: 0,
+                  paymentstatus: 3
+                },
+                {
+                  query: { id: bookRes[i].id },
+                }
+              );
+
+              const userDetail = User.findOne(ctx, { query: { id: bookRes[i].created_by } });
+
+              const AgencyEmail = await AgentConfig.find(ctx, { query: { id: bookRes[i].agentid, status: 1 },
+              }).then((agentRes) => {
+                return agentRes.data[0];
+              });
+
+              let replacements = {
+                booking_number: bookRes[i].bookingcode,
+                reason: reason,
+                booking_date: dlTimer.convertToLocal(ctx, bookRes[i].bookingdate.toISOString()),
+                user_name: userDetail.data.firstname + " " + userDetail.data.lastname,
+                agency_name: AgencyEmail[0].agencyname,
+                subject: ConstantsMailTemplate.UserUserAutoCancelledBookingSubject,
+                subject: ConstantsMailTemplate.UserAgencyAutoCancelledBookingSubject,
+                subject: ConstantsMailTemplate.UserAdminAutoCancelledBookingSubject,
+              };
+
+              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserUserAutoCancelledBooking, userDetail.data.email, replacements, Constants.AdminMailId);
+              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAgencyAutoCancelledBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
+              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAdminAutoCancelledBooking, Constants.AdminMailId, replacements);
+            }
+          }
+        }
+      }
+
+      return this.requestSuccess("Cancel booking payment update", res);
+    })
+    .catch((err) => {
+      console.log(err);
+      return this.requestError("Error has occured", err);
+    });
   },
 
   earnings_list: async function (ctx) {},
