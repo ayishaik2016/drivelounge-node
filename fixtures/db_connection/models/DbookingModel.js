@@ -178,7 +178,7 @@ module.exports = {
       allowNull: true
     },
     paymenttransactiondate: {
-      type: Sequelize.DATE,
+      type: Sequelize.STRING(1000),
       allowNull: true,
     },
     // pickuplat: {
