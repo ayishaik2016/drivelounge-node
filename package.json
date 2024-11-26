@@ -4,7 +4,7 @@
   "description": "My Moleculer-based microservices project",
   "scripts": {
     "dev": "moleculer-runner --repl --hot services/**/*.service.js",
-    "start": "node ./node_modules/nodemon/bin/nodemon.js ./server.js",
+    "start": "cross-env NODE_ENV=development node ./node_modules/nodemon/bin/nodemon.js ./server.js",
     "develop": "SET NODE_ENV=dev&& node ./node_modules/nodemon/bin/nodemon.js ./server.js",
     "cli": "moleculer connect NATS",
     "ci": "jest --watch",
@@ -30,7 +30,6 @@
     "@nestjs/platform-express": "^9.3.12",
     "@nestjs/platform-fastify": "^9.3.12",
     "annotations": "^1.1.2",
-    "axios": "^0.17.1",
     "confidence": "^4.0.2",
     "connect-busboy": "0.0.2",
     "cors": "^2.8.5",
@@ -72,6 +71,5 @@
     "roots": [
       "../test"
     ]
-  },
-  "type": "module"
+  }
 }
