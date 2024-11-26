@@ -2039,41 +2039,6 @@ module.exports = {
                     if (ctx.params.status == 3) {
                       let replacements = {
                         booking_number: book.data[0].bookingcode,
-                        booking_date: dlTimer.convertToLocal(ctx, book.data[0].bookingdate.toISOString()),
-                        pickup_city: book.data[0].pickupplace,
-                        dropoff_city: book.data[0].dropoffplace,
-                        pickup_date_time: dlTimer.convertToLocal(ctx, book.data[0].pickupdate.toISOString()),
-                        dropoff_date_time: dlTimer.convertToLocal(ctx, book.data[0].dropoffdate.toISOString()),
-
-                        price_per_date: book.data[0].priceperday,
-                        total_rental_days: book.data[0].totalrentaldays,
-                        vat: book.data[0].vatamount,
-                        total_cost: book.data[0].totalcost,
-                        deposit: book.data[0].deposit,
-                        coupon_value: book.data[0].couponvalue,
-
-                        booking_user_name: carDetails[0].fullname,
-                        booking_user_contact_number: carDetails[0].contactnumber,
-                        booking_user_email: carDetails[0].email,
-                        booking_user_address: carDetails[0].address,
-
-                        booking_agency_name: carDetails[0].agencyname,
-                        booking_agency_contact_number: carDetails[0].agencycontact,
-                        booking_agency_address: carDetails[0].agencyaddress,
-                        booking_agency_address_lat:carDetails[0].agentlat,
-                        booking_agency_address_lng:carDetails[0].agentlang,
-
-                        receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
-                        receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
-                        receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
-                        showmap: carDetails[0].showmap == 1 ? true : false,
-
-                        car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
-                        car_number: carDetails[0].carno,
-                        make: carDetails[0].carbrand,
-                        car_year: carDetails[0].caryear,
-                        car_model: carDetails[0].carmodel,
-
                         name: user.data.firstname + " " + user.data.lastname,
                         user_name: user.data.firstname + " " + user.data.lastname,
                         agency_name: AgencyEmail[0].agencyname,
@@ -2083,41 +2048,6 @@ module.exports = {
 
                       replacements = {
                         booking_number: book.data[0].bookingcode,
-                        booking_date: dlTimer.convertToLocal(ctx, book.data[0].bookingdate.toISOString()),
-                        pickup_city: book.data[0].pickupplace,
-                        dropoff_city: book.data[0].dropoffplace,
-                        pickup_date_time: dlTimer.convertToLocal(ctx, book.data[0].pickupdate.toISOString()),
-                        dropoff_date_time: dlTimer.convertToLocal(ctx, book.data[0].dropoffdate.toISOString()),
-
-                        price_per_date: book.data[0].priceperday,
-                        total_rental_days: book.data[0].totalrentaldays,
-                        vat: book.data[0].vatamount,
-                        total_cost: book.data[0].totalcost,
-                        deposit: book.data[0].deposit,
-                        coupon_value: book.data[0].couponvalue,
-
-                        booking_user_name: carDetails[0].fullname,
-                        booking_user_contact_number: carDetails[0].contactnumber,
-                        booking_user_email: carDetails[0].email,
-                        booking_user_address: carDetails[0].address,
-
-                        booking_agency_name: carDetails[0].agencyname,
-                        booking_agency_contact_number: carDetails[0].agencycontact,
-                        booking_agency_address: carDetails[0].agencyaddress,
-                        booking_agency_address_lat:carDetails[0].agentlat,
-                        booking_agency_address_lng:carDetails[0].agentlang,
-
-                        receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
-                        receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
-                        receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
-                        showmap: carDetails[0].showmap == 1 ? true : false,
-
-                        car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
-                        car_number: carDetails[0].carno,
-                        make: carDetails[0].carbrand,
-                        car_year: carDetails[0].caryear,
-                        car_model: carDetails[0].carmodel,
-
                         name: user.data.firstname + " " + user.data.lastname,
                         agency_name: AgencyEmail[0].agencyname,
                         subject: ConstantsMailTemplate.AdminCompletedCarBookingSubject,
@@ -2126,49 +2056,11 @@ module.exports = {
 
                       replacements = {
                         booking_number: book.data[0].bookingcode,
-                        booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
-                        pickup_city: book.data[0].pickupplace,
-                        dropoff_city: book.data[0].dropoffplace,
-                        pickup_date_time: dlTimer.convertToLocal(ctx, book.data[0].pickupdate.toISOString()),
-                        dropoff_date_time: dlTimer.convertToLocal(ctx, book.data[0].dropoffdate.toISOString()),
-
-                        price_per_date: book.data[0].priceperday,
-                        total_rental_days: book.data[0].totalrentaldays,
-                        vat: book.data[0].vatamount,
-                        total_cost: book.data[0].totalcost,
-                        deposit: book.data[0].deposit,
-                        coupon_value: book.data[0].couponvalue,
-
-                        booking_user_name: carDetails[0].fullname,
-                        booking_user_contact_number: carDetails[0].contactnumber,
-                        booking_user_email: carDetails[0].email,
-                        booking_user_address: carDetails[0].address,
-
-                        booking_agency_name: carDetails[0].agencyname,
-                        booking_agency_contact_number: carDetails[0].agencycontact,
-                        booking_agency_address: carDetails[0].agencyaddress,
-                        booking_agency_address_lat:carDetails[0].agentlat,
-                        booking_agency_address_lng:carDetails[0].agentlang,
-
-                        receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
-                        receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
-                        receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
-                        showmap: carDetails[0].showmap == 1 ? true : false,
-
-                        car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
-                        car_number: carDetails[0].carno,
-                        make: carDetails[0].carbrand,
-                        car_year: carDetails[0].caryear,
-                        car_model: carDetails[0].carmodel,
-
                         name: user.data.firstname + " " + user.data.lastname,
                         agency_name: AgencyEmail[0].agencyname,
                         subject: ConstantsMailTemplate.AgencyCompletedCarBookingSubject,
                       };
                       dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyCompletedCarBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
-
-
-
                     }
                     
                     if (ctx.params.status == 0) {
