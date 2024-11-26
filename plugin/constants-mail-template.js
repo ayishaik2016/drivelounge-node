@@ -74,7 +74,7 @@ module.exports = {
     AgencyUserCancelledBookingBeforePaymentSubject: 'Booking Cancellation - Booking Number {{booking_number}}',
     AgencyAgencyCancelledBookingBeforePaymentSubject: 'Booking Cancellation - Booking Number {{booking_number}}',
     AgencyUserCancelledBookingBeforePayment: 'AgencyUserCancelledBookingBeforePayment.html',
-    AgencyAgencyCancelledBookingBeforePayment: 'AgencyAgencyCancelledBookingBeforePayment.html',
+    AgencyAgentCancelledBookingBeforePayment: 'AgencyAgentCancelledBookingBeforePayment.html',
 
     UserUserCancelledBookingBeforePaymentSubject: 'Booking Cancellation - Booking Number {{booking_number}}',
     UserAgencyCancelledBookingBeforePaymentSubject: 'Booking Cancellation - Booking Number {{booking_number}}',

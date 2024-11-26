@@ -2102,9 +2102,9 @@ module.exports = {
                             subject: ConstantsMailTemplate.AgencyUserCancelledBookingBeforePaymentSubject,
                             subject: ConstantsMailTemplate.AgencyAgencyCancelledBookingBeforePaymentSubject,
                           };
-
+                          
                           dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyUserCancelledBookingBeforePayment, user.data.email, replacements, Constants.AdminMailId);
-                          dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyAgencyCancelledBookingBeforePayment, AgencyEmail[0].email, replacements, Constants.AdminMailId);
+                          dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyAgentCancelledBookingBeforePayment, AgencyEmail[0].email, replacements, Constants.AdminMailId);
                         }
                       } else if(ctx.params.usertype == 3) {
                         if(book.data[0].paymentstatus == 1) {

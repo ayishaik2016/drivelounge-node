@@ -43,8 +43,11 @@
                                              color: #545454;
                                              margin: 0;
                                              margin-bottom: 20px;
-                                             line-height: 1.6;">We regret to inform you that your initial Booking was cancelled due to circumstances arising in the Agency. You may sign in to your account and explore other alternative cars.
-                                          </p>
+                                             line-height: 1.6;">You have cancelled the booking number {{booking_number}}
+                                             <br><br>
+                                             Reason: {{reason}}
+                                             </p>
+											 
 											 <p style=" font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">Thanks,</p>
 											 <p style=" font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">Drive Lounge</p>
 
@@ -54,7 +57,11 @@
                                              margin: 0;
                                              margin-bottom: 20px;
                                              text-align:right;
-                                             line-height: 1.6;">يؤسفنا إبلاغك بأنه تم الغاء حجزك المبدئي لأسباب راجعة لمكتب التأجير.يمكنك تسجيل الدخول لحسابك واستكشاف سيارات بديلة</p>
+                                             line-height: 1.6;">
+                                             تم إلغاء الحجز رقم {{booking_number}} وتم ارسال بريد الكتروني إلى العميل واشعاره بالإلغاء وذلك بناءً على رغبتكم. 
+                                             <br><br>
+                                             السبب: {{reason}}   
+                                          </p>
 
                                           <p style="text-align:right;font-size: 17px;color: #545454;margin: 0;margin-bottom: 0px; line-height: 1.6">مع تحیات</p>
                                           <p style="text-align:right;font-size: 17px;color: #04242b;margin: 0;margin-bottom: 20px; line-height: 1.6; font-weight: 500;">درايف لاونج</p>
