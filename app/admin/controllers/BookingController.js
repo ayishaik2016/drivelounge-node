@@ -2079,7 +2079,7 @@ module.exports = {
                         dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminAgencyCancelledBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
                         dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminAdminCancelledBooking, Constants.AdminMailId, replacements);
                       } else if(ctx.params.usertype == 2) {
-                        if(book.data[0].paymentstatus == 1) {
+                        if(res.data[0].paymentstatus == 1) {
                           let replacements = {
                             booking_number: book.data[0].bookingcode,
                             reason: reason,
@@ -2107,7 +2107,7 @@ module.exports = {
                           dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyAgentCancelledBookingBeforePayment, AgencyEmail[0].email, replacements, Constants.AdminMailId);
                         }
                       } else if(ctx.params.usertype == 3) {
-                        if(book.data[0].paymentstatus == 1) {
+                        if(res.data[0].paymentstatus == 1) {
                           const pickupDate = new Date(book.data[0].pickupdate);
                           const currentDate = new Date();
                           
