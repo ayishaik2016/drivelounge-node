@@ -2010,7 +2010,7 @@ module.exports = {
                   type: Sequ.QueryTypes.SELECT,
                 })
                   .then(async (carDetails) => {
-                    if (ctx.params.status == 1) {
+                    if (book.data[0].bookingstatus == 1) {
                       let paymentLink = '';
                       const paymenttransaction = book.data[0].paymenttransactionjson ? JSON.parse(book.data[0].paymenttransactionjson) : {};
                       if(paymenttransaction) {
@@ -2036,7 +2036,7 @@ module.exports = {
                       dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyConfirmedCarBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
                     }
 
-                    if (ctx.params.status == 3) {
+                    if (book.data[0].bookingstatus == 3) {
                       let replacements = {
                         booking_number: book.data[0].bookingcode,
                         name: user.data.firstname + " " + user.data.lastname,
@@ -2063,86 +2063,84 @@ module.exports = {
                       dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyCompletedCarBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
                     }
                     
-                    if (ctx.params.status == 0) {
-                      if (book.data[0].bookingstatus == 0) {
-                        if(ctx.params.usertype == 1) {
+                    if (book.data[0].bookingstatus == 0) {
+                      if(ctx.params.usertype == 1) {
+                        let replacements = {
+                          booking_number: book.data[0].bookingcode,
+                          reason: reason,
+                          user_name: user.data.firstname + " " + user.data.lastname,
+                          agency_name: AgencyEmail[0].agencyname,
+                          subject: ConstantsMailTemplate.AdminUserCancelledBookingSubject,
+                          subject: ConstantsMailTemplate.AdminAgencyCancelledBookingSubject,
+                          subject: ConstantsMailTemplate.AdminAdminCancelledBookingSubject,
+                        };
+
+                        dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminUserCancelledBooking, user.data.email, replacements, Constants.AdminMailId);
+                        dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminAgencyCancelledBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
+                        dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminAdminCancelledBooking, Constants.AdminMailId, replacements);
+                      } else if(ctx.params.usertype == 2) {
+                        if(book.data[0].paymentstatus == 1) {
                           let replacements = {
                             booking_number: book.data[0].bookingcode,
                             reason: reason,
                             user_name: user.data.firstname + " " + user.data.lastname,
                             agency_name: AgencyEmail[0].agencyname,
-                            subject: ConstantsMailTemplate.AdminUserCancelledBookingSubject,
-                            subject: ConstantsMailTemplate.AdminAgencyCancelledBookingSubject,
-                            subject: ConstantsMailTemplate.AdminAdminCancelledBookingSubject,
+                            subject: ConstantsMailTemplate.AgencyUserCancelledBookingAfterPaymentSubject,
+                            subject: ConstantsMailTemplate.AgencyAgencyCancelledBookingAfterPaymentSubject,
+                            subject: ConstantsMailTemplate.AgencyAdminCancelledBookingAfterPaymentSubject,
                           };
 
-                          dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminUserCancelledBooking, user.data.email, replacements, Constants.AdminMailId);
-                          dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminAgencyCancelledBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
-                          dlMailer.sendMail(ctx, ConstantsMailTemplate.AdminAdminCancelledBooking, Constants.AdminMailId, replacements);
-                        } else if(ctx.params.usertype == 2) {
-                          if(book.data[0].paymentstatus == 1) {
+                          dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyUserCancelledBookingAfterPayment, user.data.email, replacements, Constants.AdminMailId);
+                          dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyAgencyCancelledBookingAfterPayment, AgencyEmail[0].email, replacements, Constants.AdminMailId);
+                          dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyAdminCancelledBookingAfterPayment, Constants.AdminMailId, replacements);
+                        } else {
+                          let replacements = {
+                            booking_number: book.data[0].bookingcode,
+                            reason: reason,
+                            user_name: user.data.firstname + " " + user.data.lastname,
+                            agency_name: AgencyEmail[0].agencyname,
+                            subject: ConstantsMailTemplate.AgencyUserCancelledBookingBeforePaymentSubject,
+                            subject: ConstantsMailTemplate.AgencyAgencyCancelledBookingBeforePaymentSubject,
+                          };
+
+                          dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyUserCancelledBookingBeforePayment, user.data.email, replacements, Constants.AdminMailId);
+                          dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyAgencyCancelledBookingBeforePayment, AgencyEmail[0].email, replacements, Constants.AdminMailId);
+                        }
+                      } else if(ctx.params.usertype == 3) {
+                        if(book.data[0].paymentstatus == 1) {
+                          const pickupDate = new Date(book.data[0].pickupdate);
+                          const currentDate = new Date();
+                          
+                          const timeDifference = pickupDate - currentDate;
+                          const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+                          if(daysDifference <= 1) {
                             let replacements = {
                               booking_number: book.data[0].bookingcode,
                               reason: reason,
                               user_name: user.data.firstname + " " + user.data.lastname,
                               agency_name: AgencyEmail[0].agencyname,
-                              subject: ConstantsMailTemplate.AgencyUserCancelledBookingAfterPaymentSubject,
-                              subject: ConstantsMailTemplate.AgencyAgencyCancelledBookingAfterPaymentSubject,
-                              subject: ConstantsMailTemplate.AgencyAdminCancelledBookingAfterPaymentSubject,
+                              subject: ConstantsMailTemplate.UserUserCancelledBookingAfterPaymentSubject,
+                              subject: ConstantsMailTemplate.UserAgencyCancelledBookingAfterPaymentSubject,
+                              subject: ConstantsMailTemplate.UserAdminCancelledBookingAfterPaymentSubject,
                             };
 
-                            dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyUserCancelledBookingAfterPayment, user.data.email, replacements, Constants.AdminMailId);
-                            dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyAgencyCancelledBookingAfterPayment, AgencyEmail[0].email, replacements, Constants.AdminMailId);
-                            dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyAdminCancelledBookingAfterPayment, Constants.AdminMailId, replacements);
+                            dlMailer.sendMail(ctx, ConstantsMailTemplate.UserUserCancelledBookingAfterPayment, user.data.email, replacements, Constants.AdminMailId);
+                            dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAgencyCancelledBookingAfterPayment, AgencyEmail[0].email, replacements, Constants.AdminMailId);
+                            dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAdminCancelledBookingAfterPayment, Constants.AdminMailId, replacements);
                           } else {
                             let replacements = {
                               booking_number: book.data[0].bookingcode,
                               reason: reason,
                               user_name: user.data.firstname + " " + user.data.lastname,
                               agency_name: AgencyEmail[0].agencyname,
-                              subject: ConstantsMailTemplate.AgencyUserCancelledBookingBeforePaymentSubject,
-                              subject: ConstantsMailTemplate.AgencyAgencyCancelledBookingBeforePaymentSubject,
+                              subject: ConstantsMailTemplate.UserUserCancelledBookingBeforePaymentSubject,
+                              subject: ConstantsMailTemplate.UserAgencyCancelledBookingBeforePaymentSubject,
+                              subject: ConstantsMailTemplate.UserAdminCancelledBookingBeforePaymentSubject,
                             };
 
-                            dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyUserCancelledBookingBeforePayment, user.data.email, replacements, Constants.AdminMailId);
-                            dlMailer.sendMail(ctx, ConstantsMailTemplate.AgencyAgencyCancelledBookingBeforePayment, AgencyEmail[0].email, replacements, Constants.AdminMailId);
-                          }
-                        } else if(ctx.params.usertype == 3) {
-                          if(book.data[0].paymentstatus == 1) {
-                            const pickupDate = new Date(book.data[0].pickupdate);
-                            const currentDate = new Date();
-                            
-                            const timeDifference = pickupDate - currentDate;
-                            const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
-                            if(daysDifference <= 1) {
-                              let replacements = {
-                                booking_number: book.data[0].bookingcode,
-                                reason: reason,
-                                user_name: user.data.firstname + " " + user.data.lastname,
-                                agency_name: AgencyEmail[0].agencyname,
-                                subject: ConstantsMailTemplate.UserUserCancelledBookingAfterPaymentSubject,
-                                subject: ConstantsMailTemplate.UserAgencyCancelledBookingAfterPaymentSubject,
-                                subject: ConstantsMailTemplate.UserAdminCancelledBookingAfterPaymentSubject,
-                              };
-  
-                              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserUserCancelledBookingAfterPayment, user.data.email, replacements, Constants.AdminMailId);
-                              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAgencyCancelledBookingAfterPayment, AgencyEmail[0].email, replacements, Constants.AdminMailId);
-                              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAdminCancelledBookingAfterPayment, Constants.AdminMailId, replacements);
-                            } else {
-                              let replacements = {
-                                booking_number: book.data[0].bookingcode,
-                                reason: reason,
-                                user_name: user.data.firstname + " " + user.data.lastname,
-                                agency_name: AgencyEmail[0].agencyname,
-                                subject: ConstantsMailTemplate.UserUserCancelledBookingBeforePaymentSubject,
-                                subject: ConstantsMailTemplate.UserAgencyCancelledBookingBeforePaymentSubject,
-                                subject: ConstantsMailTemplate.UserAdminCancelledBookingBeforePaymentSubject,
-                              };
-  
-                              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserUserCancelledBookingBeforePayment, user.data.email, replacements, Constants.AdminMailId);
-                              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAgencyCancelledBookingBeforePayment, AgencyEmail[0].email, replacements, Constants.AdminMailId);
-                              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAdminCancelledBookingBeforePayment, Constants.AdminMailId, replacements);
-                            }
+                            dlMailer.sendMail(ctx, ConstantsMailTemplate.UserUserCancelledBookingBeforePayment, user.data.email, replacements, Constants.AdminMailId);
+                            dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAgencyCancelledBookingBeforePayment, AgencyEmail[0].email, replacements, Constants.AdminMailId);
+                            dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAdminCancelledBookingBeforePayment, Constants.AdminMailId, replacements);
                           }
                         }
                       }
@@ -2216,47 +2214,7 @@ module.exports = {
                       ctx.meta.log = "New booking added by user without coupon.";
                       let replacements = {
                         name: `${ans.data.firstname} ${ans.data.lastname}`,
-                        booking_number: res.data[0].bookingcode,
-                        booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
-                        pickup_city: res.data[0].pickupplace,
-                        dropoff_city: res.data[0].dropoffplace,
-                        pickup_date_time: dlTimer.convertToLocal(ctx, res.data[0].pickupdate.toISOString()),
-                        dropoff_date_time: dlTimer.convertToLocal(ctx, res.data[0].dropoffdate.toISOString()),
-                        price_per_date: res.data[0].priceperday,
-                        total_rental_days: res.data[0].totalrentaldays,
-                        vat: res.data[0].vatamount,
-                        total_cost: res.data[0].totalcost,
-                        deposit: res.data[0].deposit,
-                        coupon_value: res.data[0].couponvalue,
-        
-                        booking_user_name: carDetails[0].fullname,
-                        booking_user_contact_number: carDetails[0].contactnumber,
-                        booking_user_email: carDetails[0].email,
-                        booking_user_address: carDetails[0].address,
-        
-                        booking_agency_name: carDetails[0].agencyname,
-                        booking_agency_contact_number: carDetails[0].agencycontact,
-                        booking_agency_address: carDetails[0].agencyaddress,
-                        booking_agency_address_lat:carDetails[0].agentlat,
-                        booking_agency_address_lng:carDetails[0].agentlang,
-        
-                        receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
-                        receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
-                        receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
-                        showmap: carDetails[0].showmap == 1 ? true : false,
-        
-                        car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
-                        car_number: carDetails[0].carno,
-                        make: carDetails[0].carbrand,
-                        car_year: carDetails[0].caryear,
-                        car_model: carDetails[0].carmodel,
-        
-                        // car_image_path: 'https://api.drivelounge.com/' + res.data.imageurl,
-                        // car_number: res.data.carid,
-                        // make: res.data.make,
-                        // car_year: res.data.caryear,
-                        // car_model: res.data.dropoffplace,
-        
+                        booking_number: res.data[0].bookingcode,      
                         subject: ConstantsMailTemplate.UserPaymentCarBookingSubject,
                       };
         
@@ -2264,41 +2222,6 @@ module.exports = {
         
                       replacements = {
                         booking_number: res.data[0].bookingcode,
-                        booking_date: dlTimer.convertToLocal(ctx, carDetails[0].bookingdate.toISOString()),
-                        pickup_city: res.data[0].pickupplace,
-                        dropoff_city: res.data[0].dropoffplace,
-                        pickup_date_time: dlTimer.convertToLocal(ctx, res.data[0].pickupdate.toISOString()),
-                        dropoff_date_time: dlTimer.convertToLocal(ctx, res.data[0].dropoffdate.toISOString()),
-        
-                        price_per_date: res.data[0].priceperday,
-                        total_rental_days: res.data[0].totalrentaldays,
-                        vat: res.data[0].vatamount,
-                        total_cost: res.data[0].totalcost,
-                        deposit: res.data[0].deposit,
-                        coupon_value: res.data[0].couponvalue,
-        
-                        booking_user_name: carDetails[0].fullname,
-                        booking_user_contact_number: carDetails[0].contactnumber,
-                        booking_user_email: carDetails[0].email,
-                        booking_user_address: carDetails[0].address,
-        
-                        booking_agency_name: carDetails[0].agencyname,
-                        booking_agency_contact_number: carDetails[0].agencycontact,
-                        booking_agency_address: carDetails[0].agencyaddress,
-                        booking_agency_address_lat:carDetails[0].agentlat,
-                        booking_agency_address_lng:carDetails[0].agentlang,
-        
-                        receiving_address: carDetails[0].showmap == 1 ? carDetails[0].pickupaddress : '',
-                        receiving_address_lat:carDetails[0].showmap == 1 ? carDetails[0].pickuplat : '',
-                        receiving_address_lng:carDetails[0].showmap == 1 ? carDetails[0].pickuplang : '',
-                        showmap: carDetails[0].showmap == 1 ? true : false,
-        
-                        car_image_path: 'https://api.drivelounge.com/' + carDetails[0].imageurl,
-                        car_number: carDetails[0].carno,
-                        make: carDetails[0].carbrand,
-                        car_year: carDetails[0].caryear,
-                        car_model: carDetails[0].carmodel,
-        
                         agency_name: AgencyEmail.agencyname,
                         subject: ConstantsMailTemplate.AgencyUserPaymentCarBookingSubject,
                       };
