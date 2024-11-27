@@ -2408,7 +2408,7 @@ module.exports = {
       const bookRes = res.data;
       if(bookRes.length > 0) {
         for(let i = 0; i < bookRes.length; i++) {
-          const pickupDate = new Date(bookRes[i].pickupdate);
+          const pickupDate = new Date(bookRes[i].created_at);
           const currentDate = new Date();
           
           const timeDifference = pickupDate - currentDate;
