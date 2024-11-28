@@ -1904,8 +1904,8 @@ module.exports = {
               cancelationtotalamount = cancelationcharges * (vatpercent/100);
             }
 
+            let paymentStatus = 3;
             if(res.data[0].paymentstatus == 1) {
-              let paymentStatus = 3;
               const refundTotalCost = res.data[0].totalcost - cancelationtotalamount; 
               const clientIp = ctx.ip || '';
               const txnDetails = "" + bookingCode + "|" + TERMINAL_ID + "|" + TERMINAL_PASSWORD + "|" + SECRET_KEY + "|" + refundTotalCost + "|"+ DEFAULT_CURRENCY +"";
