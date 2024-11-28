@@ -2428,7 +2428,7 @@ module.exports = {
 
             const userDetail = await User.findOne(ctx, { query: { id: bookRes[i].created_by } });
 
-            const AgencyEmail = await AgentConfig.find(ctx, { query: { id: bookRes[i].agentid, status: 1 },
+            const AgencyEmail = await AgentConfig.find(ctx, { query: { id: bookRes[i].agentid },
             }).then((agentRes) => {
               return agentRes.data[0];
             });
@@ -2437,14 +2437,14 @@ module.exports = {
               booking_number: bookRes[i].bookingcode,
               reason: "Auto Cancelled",
               user_name: userDetail.data.firstname + " " + userDetail.data.lastname,
-              agency_name: AgencyEmail[0].agencyname,
+              agency_name: AgencyEmail.agencyname,
               subject: ConstantsMailTemplate.AgentUserAutoCancelledBookingSubject,
               subject: ConstantsMailTemplate.AgentAgencyAutoCancelledBookingSubject,
               subject: ConstantsMailTemplate.AgentAdminAutoCancelledBookingSubject,
             };
 
             dlMailer.sendMail(ctx, ConstantsMailTemplate.AgentUserAutoCancelledBooking, userDetail.data.email, replacements, Constants.AdminMailId);
-            dlMailer.sendMail(ctx, ConstantsMailTemplate.AgentAgencyAutoCancelledBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
+            dlMailer.sendMail(ctx, ConstantsMailTemplate.AgentAgencyAutoCancelledBooking, AgencyEmail.email, replacements, Constants.AdminMailId);
             dlMailer.sendMail(ctx, ConstantsMailTemplate.AgentAdminAutoCancelledBooking, Constants.AdminMailId, replacements);
           }
         }
@@ -2492,14 +2492,14 @@ module.exports = {
                 booking_number: bookRes[i].bookingcode,
                 reason: 'Auto Cancelled',
                 user_name: userDetail.data.firstname + " " + userDetail.data.lastname,
-                agency_name: AgencyEmail[0].agencyname,
+                agency_name: AgencyEmail.agencyname,
                 subject: ConstantsMailTemplate.UserUserAutoCancelledBookingSubject,
                 subject: ConstantsMailTemplate.UserAgencyAutoCancelledBookingSubject,
                 subject: ConstantsMailTemplate.UserAdminAutoCancelledBookingSubject,
               };
 
               dlMailer.sendMail(ctx, ConstantsMailTemplate.UserUserAutoCancelledBooking, userDetail.data.email, replacements, Constants.AdminMailId);
-              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAgencyAutoCancelledBooking, AgencyEmail[0].email, replacements, Constants.AdminMailId);
+              dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAgencyAutoCancelledBooking, AgencyEmail.email, replacements, Constants.AdminMailId);
               dlMailer.sendMail(ctx, ConstantsMailTemplate.UserAdminAutoCancelledBooking, Constants.AdminMailId, replacements);
             }
           }
