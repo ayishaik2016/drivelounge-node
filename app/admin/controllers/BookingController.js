@@ -2426,7 +2426,7 @@ module.exports = {
               }
             );
 
-            const userDetail = User.findOne(ctx, { query: { id: bookRes[i].created_by } });
+            const userDetail = await User.findOne(ctx, { query: { id: bookRes[i].created_by } });
 
             const AgencyEmail = await AgentConfig.find(ctx, { query: { id: bookRes[i].agentid, status: 1 },
             }).then((agentRes) => {
@@ -2435,7 +2435,7 @@ module.exports = {
 
             let replacements = {
               booking_number: bookRes[i].bookingcode,
-              reason: reason,
+              reason: "Auto Cancelled",
               user_name: userDetail.data.firstname + " " + userDetail.data.lastname,
               agency_name: AgencyEmail[0].agencyname,
               subject: ConstantsMailTemplate.AgentUserAutoCancelledBookingSubject,
@@ -2481,7 +2481,7 @@ module.exports = {
                 }
               );
 
-              const userDetail = User.findOne(ctx, { query: { id: bookRes[i].created_by } });
+              const userDetail = await User.findOne(ctx, { query: { id: bookRes[i].created_by } });
 
               const AgencyEmail = await AgentConfig.find(ctx, { query: { id: bookRes[i].agentid, status: 1 },
               }).then((agentRes) => {
@@ -2490,7 +2490,7 @@ module.exports = {
 
               let replacements = {
                 booking_number: bookRes[i].bookingcode,
-                reason: reason,
+                reason: 'Auto Cancelled',
                 user_name: userDetail.data.firstname + " " + userDetail.data.lastname,
                 agency_name: AgencyEmail[0].agencyname,
                 subject: ConstantsMailTemplate.UserUserAutoCancelledBookingSubject,
