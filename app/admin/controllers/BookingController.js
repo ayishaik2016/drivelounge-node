@@ -1905,6 +1905,7 @@ module.exports = {
             }
 
             if(res.data[0].paymentstatus == 1) {
+              let paymentStatus = 3;
               const refundTotalCost = res.data[0].totalcost - cancelationtotalamount; 
               const clientIp = ctx.ip || '';
               const txnDetails = "" + bookingCode + "|" + TERMINAL_ID + "|" + TERMINAL_PASSWORD + "|" + SECRET_KEY + "|" + refundTotalCost + "|"+ DEFAULT_CURRENCY +"";
@@ -1931,11 +1932,12 @@ module.exports = {
               const paymentResponse = await axios.post(PAYMENT_URL, PaymentData);
               const paymentRes = paymentResponse.data;
               if(paymentRes.result != null && paymentRes.result != 'Successful') {
-                return this.requestError("Refund failed", paymentRes);
+                paymentStatus = 4;
+                //return this.requestError("Refund failed", paymentRes);
               } 
             }
 
-            bookingArr.paymentstatus = 3;
+            bookingArr.paymentstatus = paymentStatus;
             bookingArr.cancellationreason = reason;
             bookingArr.cancelationdays = cancelationdays;
             bookingArr.cancelationcharges = cancelationcharges;
