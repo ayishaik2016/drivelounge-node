@@ -2413,9 +2413,9 @@ module.exports = {
           const pickupDate = new Date(bookRes[i].created_at);
           const currentDate = new Date();
           
-          const timeDifference = pickupDate - currentDate;
+          const timeDifference = currentDate - pickupDate;
           const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
-          if(daysDifference <= 1) {
+          if(daysDifference >= 1) {
             await Booking.updateBy(ctx, bookRes[i].id, 
               {
                 bookingstatus: 0,
@@ -2467,10 +2467,10 @@ module.exports = {
           if(bookRes[i].paymentstatus == 0 || bookRes[i].paymentstatus == 2) {
             const paymentTransactionDate = new Date(bookRes[i].paymenttransactiondate);
             const currentDate = new Date();
-            
-            const timeDifference = paymentTransactionDate - currentDate;
+
+            const timeDifference = currentDate - paymentTransactionDate;
             const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
-            if(daysDifference <= 1) {
+            if(daysDifference >= 1) {
               await Booking.updateBy(ctx, bookRes[i].id, 
                 {
                   bookingstatus: 0,
