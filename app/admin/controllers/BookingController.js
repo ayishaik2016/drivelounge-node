@@ -2298,7 +2298,7 @@ module.exports = {
     return Booking.find(ctx, { query: { bookingcode: ctx.params.id } })
       .then(async(bookRes) => {
         if (bookRes.data.length > 0 && bookRes.data[0].id) {
-          if(bookRes.data[0].paymentstatus == 2) {
+          if(bookRes.data[0].paymentstatus == 0 || bookRes.data[0].paymentstatus == 2) {
             
             let bookingArr = {};
             const totalCost = bookRes.data[0].totalcost;
