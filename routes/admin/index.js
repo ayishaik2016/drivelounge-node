@@ -64,7 +64,8 @@ module.exports = {
         "customer.*",
         "enquiry.*",
         "users.*",
-        'reports.*'
+        'reports.*',
+        'auth.admin_changePassword'
     ],
     aliases: {
         // File upload from HTML form and overwrite busboy config
@@ -370,6 +371,8 @@ module.exports = {
         "GET reports/report4": "reports.report4",
         "GET reports/report5": "reports.report5",
         "GET reports/report6": "reports.report6",
+        
+        "PUT change/password": "auth.admin_changePassword",
     }
 
 }

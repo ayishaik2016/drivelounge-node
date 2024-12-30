@@ -68,6 +68,10 @@ module.exports = {
         id: "number",
         password: "string"
     },
+    verifyadmin_change_Password: {
+        id: "number",
+        password: "string"
+    },
     logout: { },
     admin_profile: {
         firstname: "string",

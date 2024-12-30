@@ -7,7 +7,9 @@ const Database = require("../adapters/Database");
 const Request = require("../mixins/request.mixin");
 const CodeTypes = require("../fixtures/error.codes");
 const AuthValidator = require("../app/common/validators/AuthValidator");
-const AuthController = require("../app/common/controllers/AuthController");
+const AuthController = require("../app/common/controllers/AuthController");	
+const UserValidator = require("../app/common/validators/UserValidator");
+const UserController = require("../app/common/controllers/UserController");
 const nodemailer = require('nodemailer');
 const JWT_SECRET = "TOP SECRET!!!";
 const Config = require("./../config");
@@ -136,7 +138,17 @@ module.exports = {
 		admin_profile: {
 			params: AuthValidator.admin_profile,
 			handler: AuthController.admin_profile
-		}
+		},
+
+        admin_changePassword: {
+        	// params: LoginValidator.changePassword,
+        	handler: UserController.admin_changePassword
+        },
+
+		verifyadmin_change_Password: {
+			params: AuthValidator.verifyadmin_change_Password,
+			handler: AuthController.verifyadmin_change_Password
+		},
 	},
 
 	methods: {

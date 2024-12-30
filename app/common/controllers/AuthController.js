@@ -1375,6 +1375,30 @@ module.exports = {
             });
     },
 
+    verifyadmin_change_Password: function(ctx) {
+        return User.findOne(ctx, {
+                query: {
+                    id: ctx.params.id
+                }
+            })
+            .then((res) => {
+                if (passwordHash.verify(ctx.params.password, res.data.password))
+                    return this.requestSuccess("Valid Password", pick(res.data, Filters_Logins.encode));
+                else
+                    return this.requestError(CodeTypes.USERS_PASSWORD_NOT_SAME);
+            })
+            .catch((err) => {
+                if (err instanceof MoleculerError)
+                    return Promise.reject(err);
+                else if (err.name === 'Nothing Found')
+                    return this.requestError(CodeTypes.NOTHING_FOUND);
+                else {
+                    this.logger.info(err);
+                    return this.requestError(CodeTypes.UNKOWN_ERROR);
+                }
+            });
+    },
+
 
     //********************************** agent related api's end*********************************
 
