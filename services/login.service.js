@@ -41,10 +41,10 @@ module.exports = {
         // 	handler: LoginController.changeInfo
         // },
 
-        // changePassword: {
-        // 	params: LoginValidator.changePassword,
-        // 	handler: LoginController.changePassword
-        // },
+        changePassword: {
+        	params: UserController.changePassword,
+        	handler: UserController.changePassword
+        },
 
         // user_changePassword: {
         // 	params: LoginValidator.user_changePassword,
