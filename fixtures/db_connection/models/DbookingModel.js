@@ -181,6 +181,14 @@ module.exports = {
       type: Sequelize.STRING(1000),
       allowNull: true,
     },
+    admincommission: {
+      type: Sequelize.DECIMAL(12, 3),
+      allowNull: true,
+    },
+    adminvat: {
+      type: Sequelize.DECIMAL(12, 3),
+      allowNull: true,
+    },
     // pickuplat: {
     //     type: Sequelize.STRING(250),
     //     allowNull: true
