@@ -119,7 +119,7 @@ module.exports = {
       defaultValue: 0,
     },
     paymenttransactionid: {
-      type: Sequelize.STRING(100),
+      type: Sequelize.BIGINT,
       allowNull: true,
     },
     bookingstatus: {
