@@ -144,6 +144,7 @@ module.exports = {
       vatamount: ctx.params.vatamount,
       subtotal: ctx.params.subtotal,
       admincommission: ctx.params.serviceFee,
+      adminvat: ctx.params.serviceFee * (ctx.params.vatpercent / 100),
       totalcost: ctx.params.totalcost,
       otheramount: ctx.params.otheramount,
       paymentmode: ctx.params.paymentmode,
@@ -2170,7 +2171,10 @@ module.exports = {
   },
 
   confirmation: async function (ctx) {
-    return Booking.find(ctx, { query: { bookingcode: ctx.params.id } })
+    return Booking.find(ctx, { query: { 
+      bookingcode: ctx.params.id,
+      paymenttransactionid: ctx.params.paymentId
+    } })
       .then((bookRes) => {
         if (bookRes.data.length > 0 && bookRes.data[0].id) {
           if(bookRes.data[0].paymentstatus == 0 || bookRes.data[0].paymentstatus == 2) {
