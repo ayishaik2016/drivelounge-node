@@ -16,10 +16,11 @@ const mail_template = __dirname;
 const handlebars = require("handlebars");
 const crypto = require('crypto');
 const axios = require('axios');
-
+const puppeteer = require('puppeteer');
 const activity = require("../../../helpers/activitylog");
 const dlMailer = require("../../../helpers/DLMailer");
 const dlTimer = require("../../../helpers/DLTimer");
+const QRCode = require('qrCode');
 
 const Sequ = require("sequelize");
 const { QueryTypes } = require("sequelize");
@@ -108,7 +109,7 @@ const AgentConfig = new Database("Dagent");
 // ]);
 //DEFAULT STATUS VALUES SEE IN CONSTANTS JS FILE
 
-const { STATUS, DELETE, ACTIVE, INACTIVE, RESERVATION, BOOKED, DEFAULT_COUNTRY, DEFAULT_CURRENCY, TERMINAL_ID, TERMINAL_PASSWORD, SECRET_KEY, PAYMENT_URL, PAYMENT_LINK } = Constants;
+const { STATUS, DELETE, ACTIVE, INACTIVE, RESERVATION, BOOKED, DEFAULT_COUNTRY, DEFAULT_CURRENCY, TERMINAL_ID, TERMINAL_PASSWORD, SECRET_KEY, PAYMENT_URL, PAYMENT_LINK, SELLER_NAME, VAT_NUMBER } = Constants;
 
 module.exports = {
   // Reservation
@@ -1910,11 +1911,15 @@ module.exports = {
             if(res.data[0].paymentstatus == 1) {
               const refundTotalCost = res.data[0].totalcost - cancelationtotalamount; 
               const clientIp = ctx.ip || '';
-              const txnDetails = "" + bookingCode + "|" + TERMINAL_ID + "|" + TERMINAL_PASSWORD + "|" + SECRET_KEY + "|" + refundTotalCost + "|"+ DEFAULT_CURRENCY +"";
+              const bookingRandom = Math.random() * 25;
+              const bookingRandomPrefix = Math.random() * 25;
+              const bookingRandomCode = bookingRandomPrefix + '-' + bookingCode + '-' + bookingRandom;
+              const bookingCodeEncrypt = crypto.createHash('sha256').update(bookingRandomCode, 'utf8').digest('hex');
+              const txnDetails = "" + bookingRandomCode + "|" + TERMINAL_ID + "|" + TERMINAL_PASSWORD + "|" + SECRET_KEY + "|" + refundTotalCost + "|"+ DEFAULT_CURRENCY +"";
               const txtSecretKey = crypto.createHash('sha256').update(txnDetails, 'utf8').digest('hex');
               const userDetail = await User.findOne(ctx, { query: { id: res.data[0].created_by }});
               const PaymentData = {
-                "trackid": bookingCode,
+                "trackid": bookingRandomCode,
                 "terminalId": TERMINAL_ID,
                 "password": TERMINAL_PASSWORD,
                 "action": 2,
@@ -1924,8 +1929,8 @@ module.exports = {
                 "requestHash": txtSecretKey,
                 "customerEmail" : userDetail.data.email,
                 "currency": DEFAULT_CURRENCY,
-                "udf1": bookingCode,
-                "udf2": PAYMENT_LINK + '?id=' + bookingCode,
+                "udf1": bookingRandomCode,
+                "udf2": PAYMENT_LINK + '?id=' + bookingRandomCode,
                 "udf3": DEFAULT_COUNTRY,
                 "metaData":"{\"entryone\":\"A\",\"entrytwo\":\"J\",\"entrythree\":\"xyz\"}",
                 "transid": res.data[0].paymenttransactionid
@@ -1952,11 +1957,15 @@ module.exports = {
 
             // const clientIp = ctx.ip || ctx.connection.remoteAddress;
             const clientIp = ctx.ip || '';
-            const txnDetails = "" + bookingCode + "|" + TERMINAL_ID + "|" + TERMINAL_PASSWORD + "|" + SECRET_KEY + "|" + totalCost + "|"+ DEFAULT_CURRENCY +"";
+            const bookingRandom = Math.random() * 25;
+            const bookingRandomPrefix = Math.random() * 25;
+            const bookingRandomCode = bookingRandomPrefix + '-' + bookingCode + '-' + bookingRandom;
+            const bookingCodeEncrypt = crypto.createHash('sha256').update(bookingRandomCode, 'utf8').digest('hex');
+            const txnDetails = "" + bookingRandomCode + "|" + TERMINAL_ID + "|" + TERMINAL_PASSWORD + "|" + SECRET_KEY + "|" + totalCost + "|"+ DEFAULT_CURRENCY +"";
             const txtSecretKey = crypto.createHash('sha256').update(txnDetails, 'utf8').digest('hex');
             const userDetail = await User.findOne(ctx, { query: { id: res.data[0].created_by }});
             const PaymentData = {
-              "trackid": bookingCode,
+              "trackid": bookingRandomCode,
               "terminalId": TERMINAL_ID,
               "password": TERMINAL_PASSWORD,
               "action": 1,
@@ -1967,8 +1976,8 @@ module.exports = {
               // "customerEmail" : userDetail.data[0].email ? userDetail.data[0].email : '',
               "customerEmail" : userDetail.data.email,
               "currency": DEFAULT_CURRENCY,
-              "udf1": bookingCode,
-              "udf2": PAYMENT_LINK + '?id=' + bookingCode,
+              "udf1": bookingRandomCode,
+              "udf2": PAYMENT_LINK + '?id=' + bookingRandomCode,
               "udf3": DEFAULT_COUNTRY,
               "metaData":"{\"entryone\":\"A\",\"entrytwo\":\"J\",\"entrythree\":\"xyz\"}",
             };
@@ -2171,8 +2180,10 @@ module.exports = {
   },
 
   confirmation: async function (ctx) {
+    const bookingCode = ctx.params.id;
+    const bookingCodeArr = bookingCode.split("-");
     return Booking.find(ctx, { query: { 
-      bookingcode: ctx.params.id,
+      bookingcode: bookingCodeArr[0],
       paymenttransactionid: ctx.params.paymentId
     } })
       .then((bookRes) => {
@@ -2185,7 +2196,7 @@ module.exports = {
                   paymentstatus: 2
                 },
                 {
-                  query: { bookingcode: ctx.params.id },
+                  query: { bookingcode: bookingCodeArr[0] },
                 }
               ).then((res1) => {
                 return this.requestSuccess("Payment Confirmation", res1);
@@ -2200,7 +2211,7 @@ module.exports = {
                   paymentstatus: 1
                 },
                 {
-                  query: { bookingcode: ctx.params.id },
+                  query: { bookingcode: bookingCodeArr[0] },
                 }
               ).then(async (res) => {
                 return User.findOne(ctx, {
@@ -2212,11 +2223,116 @@ module.exports = {
                     type: Sequ.QueryTypes.SELECT,
                   })
                   .then(async (carDetails) => {
-                   const AgencyEmail = await AgentConfig.find(ctx, {
-                        query: { id: res.data[0].agentid, status: 1 },
-                      }).then((res) => {
-                        return res.data[0];
+                    function getTLVForValue(tagNum, tagValue) {
+                      var tagBuf = Buffer.from([tagNum], 'utf8');
+                      var tagValueLenBuf = Buffer.from([tagValue.length], 'utf8');
+                      var tagValueBuf = Buffer.from(tagValue, 'utf8');
+                  
+                      var bufsArr = [tagBuf, tagValueLenBuf, tagValueBuf];
+                  
+                      return Buffer.concat(bufsArr);
+                    }
+
+                    function convertImageToDataUri(imagePath) {
+                      // Read the image file
+                      const imageBuffer = fs.readFileSync(imagePath);
+                    
+                      // Convert the buffer to a Base64 string
+                      const base64String = imageBuffer.toString('base64');
+                    
+                      // Get the file extension
+                      const extname = path.extname(imagePath).toLowerCase();
+                    
+                      // Define MIME type based on the extension
+                      let mimeType = '';
+                      if (extname === '.jpg' || extname === '.jpeg') {
+                        mimeType = 'image/jpeg';
+                      } else if (extname === '.png') {
+                        mimeType = 'image/png';
+                      } else if (extname === '.gif') {
+                        mimeType = 'image/gif';
+                      } else {
+                        throw new Error('Unsupported file type');
+                      }
+                    
+                      // Return the Data URI
+                      return `data:${mimeType};base64,${base64String}`;
+                    }
+                
+                    const currentDate = new Date();
+                    const bookingCode = res.data[0].bookingcode;
+                    const currentTimeFormat = currentDate.toISOString().slice(0, 19) + 'Z';
+                    const bookingTotalCost = res.data[0].totalcost;
+                    const bookingVatAmount = res.data[0].vatamount;
+                
+                    var sellerNameBuf = getTLVForValue("1", SELLER_NAME);
+                    var VatRegistrationBuf = getTLVForValue("2", VAT_NUMBER);
+                    var timeStampBuf = getTLVForValue("3", currentTimeFormat);
+                    var totalAmountBuf = getTLVForValue("4", bookingTotalCost.toString());
+                    var vatAmountBuf = getTLVForValue("5", bookingVatAmount.toString());   
+                    
+                    var tagsBufarray = [sellerNameBuf, VatRegistrationBuf, timeStampBuf, totalAmountBuf, vatAmountBuf];
+  
+                    var qrCodeBuf = Buffer.concat(tagsBufarray);
+                    var qrCodeBaseEncode = qrCodeBuf.toString('base64');
+                    const qrCodePath = 'invoice/qrcode/' + bookingCode + '.png';
+                    await QRCode.toFile(qrCodePath, qrCodeBaseEncode, {
+                        color: { 
+                          dark: '#000000',  // Dark color
+                          light: '#FFFFFF'  // Light color (background)
+                        },
+                        width: 400,  
+                        height: 400
                       });
+
+                    const AgencyEmail = await AgentConfig.find(ctx, {
+                      query: { id: res.data[0].agentid, status: 1 },
+                    }).then((res) => {
+                      return res.data[0];
+                    });
+
+                      const options = {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,  // 24-hour format
+                      };
+                      const paymentTransactionDate = currentDate.toLocaleString('en-GB', options).replace(',', '').replace('/', '-').replace('/', '-');
+
+                      
+                      const browser = await puppeteer.launch();
+                      const page = await browser.newPage();
+                      let filePath = path.join(__dirname, '../../../helpers/templates/' + ConstantsMailTemplate.UserPaymentSuccessAttachment); 
+
+                      if(res.data[0].couponcode != '') {
+                        filePath = path.join(__dirname, '../../../helpers/templates/' + ConstantsMailTemplate.UserPaymentCouponSuccessAttachment); 
+                      }
+                      
+                      let htmlContent = fs.readFileSync(filePath, 'utf8');
+          
+                      htmlContent = htmlContent.replace('{{booking_number}}', res.data[0].bookingcode);
+                      htmlContent = htmlContent.replace('{{payment_transaction_number}}', res.data[0].paymenttransactionid);
+                      htmlContent = htmlContent.replace('{{payment_transaction_date}}', paymentTransactionDate);
+                      htmlContent = htmlContent.replace('{{price}}', res.data[0].subtotal);
+                      htmlContent = htmlContent.replace('{{service_fee}}', res.data[0].admincommission);
+                      htmlContent = htmlContent.replace('{{coupon_value}}', res.data[0].couponvalue);
+                      htmlContent = htmlContent.replace('{{sub_total}}', (res.data[0].totalcost - res.data[0].vatamount - res.data[0].couponvalue));
+                      htmlContent = htmlContent.replace('{{vat_amount}}', res.data[0].vatamount);
+                      htmlContent = htmlContent.replace('{{total_cost}}', res.data[0].totalcost);
+                      htmlContent = htmlContent.replace('{{qrcode}}', convertImageToDataUri(qrCodePath));
+                      await page.setContent(htmlContent);
+          
+                      //await page.goto(`file://${filePath}`);
+                      const pdfPath = path.join(__dirname, '../../../invoice/' + bookingCode + '.pdf');
+                      await page.pdf({ 
+                          path: pdfPath, 
+                          width: '120mm', 
+                          height: '325mm',         
+                        });
+          
+                      await browser.close();
                       
                       ctx.meta.log = "New booking added by user without coupon.";
                       let replacements = {
@@ -2225,7 +2341,7 @@ module.exports = {
                         subject: ConstantsMailTemplate.UserPaymentCarBookingSubject,
                       };
         
-                      dlMailer.sendMail(ctx, ConstantsMailTemplate.UserPaymentCarBooking, ans.data.email, replacements, Constants.AdminMailId);
+                      dlMailer.sendMail(ctx, ConstantsMailTemplate.UserPaymentCarBooking, ans.data.email, replacements, Constants.AdminMailId, pdfPath);
         
                       replacements = {
                         booking_number: res.data[0].bookingcode,
@@ -2311,11 +2427,15 @@ module.exports = {
 
             // const clientIp = ctx.ip || ctx.connection.remoteAddress;
             const clientIp = ctx.ip || '';
-            const txnDetails = "" + bookingCode + "|" + TERMINAL_ID + "|" + TERMINAL_PASSWORD + "|" + SECRET_KEY + "|" + totalCost + "|"+ DEFAULT_CURRENCY +"";
+            const bookingRandom = Math.random() * 25;
+            const bookingRandomPrefix = Math.random() * 25;
+            const bookingRandomCode = bookingCode + '-' + bookingRandom;
+            const bookingCodeEncrypt = crypto.createHash('sha256').update(bookingRandomCode, 'utf8').digest('hex');
+            const txnDetails = "" + bookingRandomCode + "|" + TERMINAL_ID + "|" + TERMINAL_PASSWORD + "|" + SECRET_KEY + "|" + totalCost + "|"+ DEFAULT_CURRENCY +"";
             const txtSecretKey = crypto.createHash('sha256').update(txnDetails, 'utf8').digest('hex');
             const userDetail = await User.findOne(ctx, { id: bookRes.data[0].created_by });
             const PaymentData = {
-              "trackid": bookingCode,
+              "trackid": bookingRandomCode,
               "terminalId": TERMINAL_ID,
               "password": TERMINAL_PASSWORD,
               "action": 1,
@@ -2326,8 +2446,8 @@ module.exports = {
               "customerEmail" : userDetail.data.email ? userDetail.data.email : '',
               //"customerEmail" : 'test@gmail.com',
               "currency": DEFAULT_CURRENCY,
-              "udf1": bookingCode,
-              "udf2": PAYMENT_LINK + '?id=' + bookingCode,
+              "udf1": bookingRandomCode,
+              "udf2": PAYMENT_LINK + '?id=' + bookingRandomCode,
               "udf3": DEFAULT_COUNTRY,
               "metaData":"{\"entryone\":\"A\",\"entrytwo\":\"J\",\"entrythree\":\"xyz\"}",
             };

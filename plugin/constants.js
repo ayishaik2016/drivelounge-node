@@ -26,5 +26,7 @@ module.exports = {
     //TERMINAL_PASSWORD: "urway@123",
     //SECRET_KEY: "f14c2d22a427bd0f51deb2f6a61087055fb5d36a1ed71840d72ac3c1fa7edf73",
     //PAYMENT_URL: "https://payments-dev.urway-tech.com/URWAYPGService/transaction/jsonProcess/JSONrequest",
-    PAYMENT_LINK: "https://drivelounge.com/paymenttransaction"
+    PAYMENT_LINK: "https://drivelounge.com/paymenttransaction",
+    SELLER_NAME: "Drivelounge",
+    VAT_NUMBER: "310565773400003",
 };

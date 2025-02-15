@@ -5,7 +5,7 @@ const activity = require("./activitylog");
 const { DateTime } = require("luxon");
 
 module.exports = {
-  sendMail: function (ctx, fileName, toMailId, replacements, ccMailId = '') {
+  sendMail: function (ctx, fileName, toMailId, replacements, ccMailId = '', attachment = '') {
     let readHTMLFile = function (path, callback) {
       path = filePath.join(__dirname + "/templates/", path);
       fs.readFile(path, { encoding: "utf-8" }, function (err, html) {
@@ -39,6 +39,13 @@ module.exports = {
           subject: htmlToSendSubject,
           html: htmlToSend
         };
+
+        if(attachment != '') {
+          mailParams.attachments = [{
+            filename: 'output.pdf',
+            path: attachment, 
+          }]
+        }
 
         // If CC email is provided, add it to the parameters
         if (ccMailId != '') {

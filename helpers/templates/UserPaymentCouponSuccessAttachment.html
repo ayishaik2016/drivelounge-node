@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            font-size: 15px;
+        }
+
+        .email-container {
+            width: 100%;
+            background-color: #ffffff;
+            max-width: 520px;
+            /* margin: 0 auto; */
+            padding: 5px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-logo img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px;
+        }
+
+        .email-title, .email-company, .email-address, .email-content {
+            text-align: center;
+        }
+
+        .email-title p, .email-company p, .email-address p, .email-content-detail p {
+            margin: 0;
+            padding: 5px 0;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .email-content-detail {
+            margin: 15px;
+            width: 100%;
+            height: 40px;
+        }
+
+        .email-content-detail .text-left {
+            float: left;
+            width: 45%;
+            text-align: left;
+        }
+
+        .email-content-detail .text-right {
+            float: right;
+            width: 45%;
+            padding-top: 14px;
+            text-align: left;
+        }
+
+        .email-content-left {
+            direction: rtl;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-logo">
+            <a href="https://drivelounge.com/" target="_blank"><img src="https://api.drivelounge.com/logo.png" width="100" height="70" alt="logo"></a>
+        </div>
+        <div class="email-title">
+            <p class="text-center email-content-left">ةروتاف ةيبيرض ةطسبم</p>
+            <p class="text-center">Simplified Tax Invoice</p>
+        </div>
+        <!-- <div class="email-company">
+            <p class="text-center email-content-left">ةكرش نشيتسرقنه ةدودحملا</p>
+            <p class="text-center">Hungerstation LLC</p>
+        </div> -->
+        <div class="email-address">
+            <p class="text-center">Head office: First floor, Back Yard Square, King Abdul Aziz Branch Road, Riyadh, Saudi Arabia.</p>
+        </div>
+        <div class="email-content">
+            <div class="email-content-detail">
+                <p class="text-left email-content-left">
+                    <span style="direction: rtl;">رقم الحجز</span>
+                    <br>
+                    Booking Number
+                </p>
+                <p class="text-right">{{booking_number}}</p>
+            </div>
+            <div class="email-content-detail">
+                <p class="text-left email-content-left">
+                    <span style="direction: rtl;">معاملة الدفع</span>
+                    <br>
+                    <span>Payment Transaction Number</span>
+                </p>
+                <p class="text-right">{{payment_transaction_number}}</p>
+            </div>
+            <div class="email-content-detail">
+                <p class="text-left">
+                    <span style="direction: rtl;">خيرات ةروتافلا</span>
+                    <br>
+                    <span>Invoice Date</span>
+                </p>
+                <p class="text-right">{{payment_transaction_date}}</p>
+            </div>
+        </div>
+        <hr>
+        <div class="email-content">
+            <div class="email-content-detail">
+                <p class="text-left email-content-left">
+                    <span style="direction: rtl;">السعر</span>
+                    <br>
+                    Price
+                </p>
+                <p class="text-right">{{price}} SAR</p>
+            </div>
+            <div class="email-content-detail">
+                <p class="text-left email-content-left">
+                    <span style="direction: rtl;">ضريبة القيمة المضافة</span>
+                    <br>
+                    <span>Service Fee</span>
+                </p>
+                <p class="text-right">{{service_fee}} SAR</p>
+            </div>
+            <div class="email-content-detail">
+                <p class="text-left">
+                    <span style="direction: rtl;">قيمة كوبون الخصم</span>
+                    <br>
+                    <span>-Coupon Value</span>
+                </p>
+                <p class="text-right">{{coupon_value}} SAR</p>
+            </div>
+        </div>
+        <hr>
+        <div class="email-content">
+            <div class="email-content-detail">
+                <p class="text-left">
+                    <span style="direction: rtl;">المجموع الفرعي</span>
+                    <br>
+                    Sub Total
+                </p>
+                <p class="text-right">{{sub_total}} SAR</p>
+            </div>
+            <div class="email-content-detail">
+                <p class="text-left">
+                    <span style="direction: rtl;">ضريبة القيمة المضافة</span>
+                    <br>
+                    +VAT 15%
+                </p> 
+                <p class="text-right">{{vat_amount}} SAR</p>
+            </div>
+        </div>
+        <hr>
+        <div class="email-content">
+            <div class="email-content-detail">
+                <p class="text-left">
+                    <span style="direction: rtl;">إجمالي المبلغ</span>
+                    <br>
+                    <span>Total Amount</span>
+                </p>
+                <p class="text-right">{{total_cost}} SAR</p>
+            </div>
+        </div>
+        <hr>
+        <div class="email-content" style="height: 450px;">
+            <div class="email-content-detail">
+                <p class="text-center">
+                    <span style="direction: rtl;">زمر ةباجتسلاا عيرسلا</span>
+                    <br>
+                    <span>QR Code</span>
+                </p>
+
+                <div class="qr_code" style="text-align: center;">
+                    <img src="{{qrcode}}">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

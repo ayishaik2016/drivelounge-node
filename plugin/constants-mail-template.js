@@ -117,4 +117,7 @@ module.exports = {
     UserUserAutoCancelledBooking: 'UserUserAutoCancelledBooking.html',
     UserAgencyAutoCancelledBooking: 'UserAgencyAutoCancelledBooking.html',
     UserAdminAutoCancelledBooking: 'UserAdminAutoCancelledBooking.html',
+
+    UserPaymentSuccessAttachment: 'UserPaymentSuccessAttachment.html',
+    UserPaymentCouponSuccessAttachment: 'UserPaymentCouponSuccessAttachment.html',
 };
