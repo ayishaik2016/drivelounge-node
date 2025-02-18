@@ -74,32 +74,32 @@
             <a href="https://drivelounge.com/" target="_blank"><img src="https://api.drivelounge.com/logo.png" width="100" height="70" alt="logo"></a>
         </div>
         <div class="email-title">
-            <p class="text-center email-content-left">ةروتاف ةيبيرض ةطسبم</p>
+            <p class="text-center email-content-left">فاتورة ضريبة مبسطة</p>
             <p class="text-center">Simplified Tax Invoice</p>
         </div>
-        <!-- <div class="email-company">
-            <p class="text-center email-content-left">ةكرش نشيتسرقنه ةدودحملا</p>
-            <p class="text-center">Hungerstation LLC</p>
-        </div> -->
+        <div class="email-company">
+            <p class="text-center email-content-left">مؤسسة صالة القيادة للتجارة والتسويق</p>
+            <p class="text-center">Drivelounge Est.</p>
+        </div>
         <div class="email-address">
-            <p class="text-center">Head office: First floor, Back Yard Square, King Abdul Aziz Branch Road, Riyadh, Saudi Arabia.</p>
+            <p class="text-center">Laban, Riyadh, Saudi Arabia</p>
         </div>
         <div class="email-content">
             <div class="email-content-detail">
                 <p class="text-left email-content-left">
-                    <span style="direction: rtl;">رقم الحجز</span>
+                    <span style="direction: rtl;">رقم التعريف الضريبي</span>
                     <br>
-                    Booking Number
+                    Tax Identification Number 
                 </p>
-                <p class="text-right">{{booking_number}}</p>
+                <p class="text-right">{{vat_number}}</p>
             </div>
             <div class="email-content-detail">
                 <p class="text-left email-content-left">
-                    <span style="direction: rtl;">معاملة الدفع</span>
+                    <span style="direction: rtl;">رقم الفاتورة / رقم الحجز</span>
                     <br>
-                    <span>Payment Transaction Number</span>
+                    Invoice Number / Book Number
                 </p>
-                <p class="text-right">{{payment_transaction_number}}</p>
+                <p class="text-right">{{booking_number}}</p>
             </div>
             <div class="email-content-detail">
                 <p class="text-left">
@@ -113,16 +113,24 @@
         <hr>
         <div class="email-content">
             <div class="email-content-detail">
+                <h3 style="text-align: left;">
+                    <span style="direction: rtl;">تفاصيل الفاتورة</span>
+                    <br>
+                    Details
+                </h3>
+            </div>
+            <hr>
+            <!-- <div class="email-content-detail">
                 <p class="text-left email-content-left">
                     <span style="direction: rtl;">السعر</span>
                     <br>
                     Price
                 </p>
                 <p class="text-right">{{price}} SAR</p>
-            </div>
+            </div> -->
             <div class="email-content-detail">
                 <p class="text-left email-content-left">
-                    <span style="direction: rtl;">ضريبة القيمة المضافة</span>
+                    <span style="direction: rtl;">رسوم الخدمة</span>
                     <br>
                     <span>Service Fee</span>
                 </p>
@@ -130,39 +138,34 @@
             </div>
             <div class="email-content-detail">
                 <p class="text-left">
-                    <span style="direction: rtl;">قيمة كوبون الخصم</span>
+                    <span style="direction: rtl;">الخصم</span>
                     <br>
-                    <span>-Coupon Value</span>
+                    <span>Discount</span>
                 </p>
                 <p class="text-right">{{coupon_value}} SAR</p>
             </div>
-        </div>
-        <hr>
-        <div class="email-content">
+            <hr>
             <div class="email-content-detail">
                 <p class="text-left">
-                    <span style="direction: rtl;">المجموع الفرعي</span>
+                    <span style="direction: rtl;">الإجمالي شامل الضريبة</span>
                     <br>
-                    Sub Total
+                    Sub Total VAT Inclusive
                 </p>
                 <p class="text-right">{{sub_total}} SAR</p>
             </div>
             <div class="email-content-detail">
                 <p class="text-left">
-                    <span style="direction: rtl;">ضريبة القيمة المضافة</span>
+                    <span style="direction: rtl;">معدل ضريبة القيمة المضافة</span>
                     <br>
                     +VAT 15%
                 </p> 
                 <p class="text-right">{{vat_amount}} SAR</p>
             </div>
-        </div>
-        <hr>
-        <div class="email-content">
             <div class="email-content-detail">
                 <p class="text-left">
-                    <span style="direction: rtl;">إجمالي المبلغ</span>
+                    <span style="direction: rtl;">مجموع ضريبة القيمة المضافة</span>
                     <br>
-                    <span>Total Amount</span>
+                    <span>Total value added tax</span>
                 </p>
                 <p class="text-right">{{total_cost}} SAR</p>
             </div>

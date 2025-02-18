@@ -2322,6 +2322,7 @@ module.exports = {
                       htmlContent = htmlContent.replace('{{vat_amount}}', res.data[0].vatamount);
                       htmlContent = htmlContent.replace('{{total_cost}}', res.data[0].totalcost);
                       htmlContent = htmlContent.replace('{{qrcode}}', convertImageToDataUri(qrCodePath));
+                      htmlContent = htmlContent.replace('{{vat_number}}', VAT_NUMBER);
                       await page.setContent(htmlContent);
           
                       //await page.goto(`file://${filePath}`);
