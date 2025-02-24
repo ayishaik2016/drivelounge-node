@@ -20,7 +20,7 @@ const puppeteer = require('puppeteer');
 const activity = require("../../../helpers/activitylog");
 const dlMailer = require("../../../helpers/DLMailer");
 const dlTimer = require("../../../helpers/DLTimer");
-const QRCode = require('qrCode');
+const QRCode = require('qrcode');
 
 const Sequ = require("sequelize");
 const { QueryTypes } = require("sequelize");
