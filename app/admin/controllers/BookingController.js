@@ -1982,15 +1982,16 @@ module.exports = {
               "metaData":"{\"entryone\":\"A\",\"entrytwo\":\"J\",\"entrythree\":\"xyz\"}",
             };
 
-            const paymentResponse = await axios.post(PAYMENT_URL, PaymentData);
+            /*const paymentResponse = await axios.post(PAYMENT_URL, PaymentData);
             const paymentRes = paymentResponse.data;
             if(paymentRes.result != null && paymentRes.result != 'Successful') {
               return this.requestError("Payment failed", paymentRes);
             } 
+            
+            bookingArr.paymenttransactionid = paymentRes.payid;
+            bookingArr.paymenttransactionjson = JSON.stringify(paymentRes);*/
 
             const paymentTransactionDate = new Date();
-            bookingArr.paymenttransactionid = paymentRes.payid;
-            bookingArr.paymenttransactionjson = JSON.stringify(paymentRes);
             bookingArr.paymenttransactiondate = paymentTransactionDate.toISOString();
           }
 
