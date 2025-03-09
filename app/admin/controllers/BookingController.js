@@ -109,7 +109,7 @@ const AgentConfig = new Database("Dagent");
 // ]);
 //DEFAULT STATUS VALUES SEE IN CONSTANTS JS FILE
 
-const { STATUS, DELETE, ACTIVE, INACTIVE, RESERVATION, BOOKED, DEFAULT_COUNTRY, DEFAULT_CURRENCY, TERMINAL_ID, TERMINAL_PASSWORD, SECRET_KEY, PAYMENT_URL, PAYMENT_LINK, SELLER_NAME, VAT_NUMBER } = Constants;
+const { STATUS, DELETE, ACTIVE, INACTIVE, RESERVATION, BOOKED, DEFAULT_COUNTRY, DEFAULT_CURRENCY, TERMINAL_ID, TERMINAL_PASSWORD, SECRET_KEY, PAYMENT_URL, PAYMENT_LINK, SELLER_NAME, VAT_NUMBER, QOYOD_API_BILL_URL, QOYOD_API_KEY } = Constants;
 
 module.exports = {
   // Reservation
@@ -1515,8 +1515,14 @@ module.exports = {
         replacements: { id: ctx.params.id, lang: ctx.params.lang },
         type: Sequ.QueryTypes.SELECT,
       })
-      .then((res) => {
-
+      .then(async(res) => {
+        const bookingCode = res[0].bookingcode;
+        const filePath = path.join(__dirname, '__uploads/invoice/' + bookingCode + '.pdf');
+        res[0].invoiceUrl = '';
+        if (fs.existsSync(filePath)) {
+          res[0].invoiceUrl = 'https://api.drivelounge.com/invoice/' + bookingCode + '.pdf';
+        }
+        
         /*
         console.log("????????????????????????????????????????");
         console.log(res[0].bookingdate);
@@ -1527,7 +1533,6 @@ module.exports = {
         console.log(d.toISO());
         console.log(res[0].bookingdate.toISOString());
         */
-
         if (res) return this.requestSuccess("Booking information", res);
         else return this.requestError(CodeTypes.NOTHING_FOUND);
       })
@@ -2277,7 +2282,7 @@ module.exports = {
                     var qrCodeBuf = Buffer.concat(tagsBufarray);
                     var qrCodeBaseEncode = qrCodeBuf.toString('base64');
                     const qrCodePath = 'invoice/qrcode/' + bookingCode + '.png';
-                    await QRCode.toFile(qrCodePath, qrCodeBaseEncode, {
+                    const qrGenerate = await QRCode.toFile(qrCodePath, qrCodeBaseEncode, {
                         color: { 
                           dark: '#000000',  // Dark color
                           light: '#FFFFFF'  // Light color (background)
@@ -2302,6 +2307,12 @@ module.exports = {
                       };
                       const paymentTransactionDate = currentDate.toLocaleString('en-GB', options).replace(',', '').replace('/', '-').replace('/', '-');
 
+                      const paymentOptions = {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                      };
+                      const paymentDate = currentDate .toLocaleString('en-GB', paymentOptions) .replace(',', '').replace('/', '-').replace('/', '-').split(' ').reverse().join('-'); 
                       
                       const browser = await puppeteer.launch();
                       const page = await browser.newPage();
@@ -2325,17 +2336,48 @@ module.exports = {
                       htmlContent = htmlContent.replace('{{qrcode}}', convertImageToDataUri(qrCodePath));
                       htmlContent = htmlContent.replace('{{vat_number}}', VAT_NUMBER);
                       await page.setContent(htmlContent);
-          
+
                       //await page.goto(`file://${filePath}`);
-                      const pdfPath = path.join(__dirname, '../../../invoice/' + bookingCode + '.pdf');
-                      await page.pdf({ 
+                      const pdfPath = path.join(__dirname, '__uploads/invoice/' + bookingCode + '.pdf');
+                        await page.pdf({ 
                           path: pdfPath, 
                           width: '120mm', 
                           height: '325mm',         
                         });
           
                       await browser.close();
-                      
+
+                      const headers = {
+                        'Content-Type': 'application/json',
+                        'API-KEY': QOYOD_API_KEY
+                      };
+
+                      const data = {
+                        "bill": {
+                          "contact_id": 2,
+                          "status": "Approved",
+                          "issue_date": paymentDate,
+                          "due_date": paymentDate,
+                          "reference": res.data[0].bookingcode,
+                          "inventory_id": 1,
+                          "line_items": [
+                            {
+                              "product_id": 4,
+                              "description": "",
+                              "quantity": 1,
+                              "unit_price": res.data[0].totalcost,
+                              "discount": res.data[0].couponvalue,
+                              "tax_percent": "15"
+                            }
+                          ],
+                          "custom_fields": {
+                            "Agentname": AgencyEmail.agencyname,
+                            "username": `${ans.data.firstname} ${ans.data.lastname}`
+                          }
+                        }
+                      };
+
+                      const paymentDetail = await axios.post(QOYOD_API_BILL_URL, data, { headers });
                       ctx.meta.log = "New booking added by user without coupon.";
                       let replacements = {
                         name: `${ans.data.firstname} ${ans.data.lastname}`,
@@ -2401,6 +2443,7 @@ module.exports = {
                 });
               })
               .catch((err) => {
+                console.log(err);
                 return this.requestError("Error has occured", err);
               })
             }

@@ -42,7 +42,7 @@ module.exports = {
 
         if(attachment != '') {
           mailParams.attachments = [{
-            filename: 'output.pdf',
+            filename: 'invoice.pdf',
             path: attachment, 
           }]
         }

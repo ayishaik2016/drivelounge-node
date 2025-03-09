@@ -29,4 +29,6 @@ module.exports = {
     PAYMENT_LINK: "https://drivelounge.com/paymenttransaction",
     SELLER_NAME: "Drivelounge",
     VAT_NUMBER: "310565773400003",
+    QOYOD_API_BILL_URL: "https://www.qoyod.com/api/2.0/bills",
+    QOYOD_API_KEY: "80d8922f46d63fba6fa1b541d",
 };
