@@ -2297,23 +2297,27 @@ module.exports = {
                       return res.data[0];
                     });
 
-                      const options = {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false,  // 24-hour format
-                      };
-                      const paymentTransactionDate = currentDate.toLocaleString('en-GB', options).replace(',', '').replace('/', '-').replace('/', '-');
-
-                      const paymentOptions = {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                      };
-                      const paymentDate = currentDate .toLocaleString('en-GB', paymentOptions) .replace(',', '').replace('/', '-').replace('/', '-').split(' ').reverse().join('-'); 
+                    /*const options = {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false,  // 24-hour format
+                    };
+                    const paymentTransactionDate = currentDate.toLocaleString('en-GB', options).replace(',', '').replace('/', '-').replace('/', '-');
                       
+                    const paymentOptions = {
+                      year: 'numeric',
+                      month: '2-digit',
+                       day: '2-digit'
+                    };
+                    const paymentDate = currentDate .toLocaleString('en-GB', paymentOptions) .replace(',', '').replace('/', '-').replace('/', '-').split(' ').reverse().join('-');*/
+                    
+                    const pad = (num) => num.toString().padStart(2, '0');
+                    const paymentTransactionDate = `${pad(currentDate.getDate())}-${pad(currentDate.getMonth() + 1)}-${currentDate.getFullYear()} ${pad(currentDate.getHours())}:${pad(currentDate.getMinutes())}`;
+                    const paymentDate = `${pad(currentDate.getDate())}-${pad(currentDate.getMonth() + 1)}-${currentDate.getFullYear()}`;
+
                       const browser = await puppeteer.launch();
                       const page = await browser.newPage();
                       let filePath = path.join(__dirname, '../../../helpers/templates/' + ConstantsMailTemplate.UserPaymentSuccessAttachment); 
@@ -2381,8 +2385,8 @@ module.exports = {
                       const billPaymentGenerate = await axios.post(QOYOD_API_BILL_URL, data, { headers });
 
                       const invoiceData = {
-                        "bill": {
-                          "contact_id": 2,
+                        "invoice": {
+                          "contact_id": 1,
                           "status": "Approved",
                           "issue_date": paymentDate,
                           "due_date": paymentDate,
@@ -2390,11 +2394,12 @@ module.exports = {
                           "inventory_id": 1,
                           "line_items": [
                             {
-                              "product_id": 4,
+                              "product_id": 1,
                               "description": "",
                               "quantity": 1,
                               "unit_price": subTotal,
                               "discount": res.data[0].couponvalue,
+                              "discount_type": "amount",
                               "tax_percent": "15"
                             }
                           ],
