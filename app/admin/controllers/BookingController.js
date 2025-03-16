@@ -109,7 +109,7 @@ const AgentConfig = new Database("Dagent");
 // ]);
 //DEFAULT STATUS VALUES SEE IN CONSTANTS JS FILE
 
-const { STATUS, DELETE, ACTIVE, INACTIVE, RESERVATION, BOOKED, DEFAULT_COUNTRY, DEFAULT_CURRENCY, TERMINAL_ID, TERMINAL_PASSWORD, SECRET_KEY, PAYMENT_URL, PAYMENT_LINK, SELLER_NAME, VAT_NUMBER, QOYOD_API_BILL_URL, QOYOD_API_KEY } = Constants;
+const { STATUS, DELETE, ACTIVE, INACTIVE, RESERVATION, BOOKED, DEFAULT_COUNTRY, DEFAULT_CURRENCY, TERMINAL_ID, TERMINAL_PASSWORD, SECRET_KEY, PAYMENT_URL, PAYMENT_LINK, SELLER_NAME, VAT_NUMBER, QOYOD_API_BILL_URL, QOYOD_API_INVOICE_URL, QOYOD_API_KEY } = Constants;
 
 module.exports = {
   // Reservation
@@ -2323,6 +2323,7 @@ module.exports = {
                       }
                       
                       let htmlContent = fs.readFileSync(filePath, 'utf8');
+                      const subTotal = res.data[0].totalcost - res.data[0].vatamount - res.data[0].couponvalue;
           
                       htmlContent = htmlContent.replace('{{booking_number}}', res.data[0].bookingcode);
                       htmlContent = htmlContent.replace('{{payment_transaction_number}}', res.data[0].paymenttransactionid);
@@ -2330,7 +2331,7 @@ module.exports = {
                       htmlContent = htmlContent.replace('{{price}}', res.data[0].subtotal);
                       htmlContent = htmlContent.replace('{{service_fee}}', res.data[0].admincommission);
                       htmlContent = htmlContent.replace('{{coupon_value}}', res.data[0].couponvalue);
-                      htmlContent = htmlContent.replace('{{sub_total}}', (res.data[0].totalcost - res.data[0].vatamount - res.data[0].couponvalue));
+                      htmlContent = htmlContent.replace('{{sub_total}}', subTotal);
                       htmlContent = htmlContent.replace('{{vat_amount}}', res.data[0].vatamount);
                       htmlContent = htmlContent.replace('{{total_cost}}', res.data[0].totalcost);
                       htmlContent = htmlContent.replace('{{qrcode}}', convertImageToDataUri(qrCodePath));
@@ -2365,7 +2366,7 @@ module.exports = {
                               "product_id": 4,
                               "description": "",
                               "quantity": 1,
-                              "unit_price": res.data[0].totalcost,
+                              "unit_price": subTotal,
                               "discount": res.data[0].couponvalue,
                               "tax_percent": "15"
                             }
@@ -2377,7 +2378,34 @@ module.exports = {
                         }
                       };
 
-                      const paymentDetail = await axios.post(QOYOD_API_BILL_URL, data, { headers });
+                      const billPaymentGenerate = await axios.post(QOYOD_API_BILL_URL, data, { headers });
+
+                      const invoiceData = {
+                        "bill": {
+                          "contact_id": 2,
+                          "status": "Approved",
+                          "issue_date": paymentDate,
+                          "due_date": paymentDate,
+                          "reference": res.data[0].bookingcode,
+                          "inventory_id": 1,
+                          "line_items": [
+                            {
+                              "product_id": 4,
+                              "description": "",
+                              "quantity": 1,
+                              "unit_price": subTotal,
+                              "discount": res.data[0].couponvalue,
+                              "tax_percent": "15"
+                            }
+                          ],
+                          "custom_fields": {
+                            "Agentname": AgencyEmail.agencyname,
+                            "username": `${ans.data.firstname} ${ans.data.lastname}`
+                          }
+                        }
+                      };
+
+                      const invoicePaymentGenerate = await axios.post(QOYOD_API_INVOICE_URL, invoiceData, { headers });
                       ctx.meta.log = "New booking added by user without coupon.";
                       let replacements = {
                         name: `${ans.data.firstname} ${ans.data.lastname}`,
