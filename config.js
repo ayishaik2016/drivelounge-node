@@ -148,18 +148,18 @@ const config = {
              $filter: 'env',
           production: {
             "username": "dluser",
-            "password": "dN*3pk4qg7",
+            "password": "Marygo693151",
             "database": "Drive-Lounge",
-            "host": "13.94.34.229",
+            "host": "drivelounge.database.windows.net",
             "instancename": "MSQLEXPRESS",
             "dialect": "mssql",
             "port": "1433"
         },
         dev: {
             "username": "dluser",
-            "password": "dN*3pk4qg7",
+            "password": "Marygo693151",
             "database": "Drive-Lounge",
-            "host": "13.94.34.229",
+            "host": "drivelounge.database.windows.net",
             "instancename": "MSQLEXPRESS",
             "dialect": "mssql",
             "port": "1433"
@@ -168,9 +168,9 @@ const config = {
             // "username": "Drive",
             // "password": "P@ssw0rd",
             "username": "dluser",
-            "password": "dN*3pk4qg7",
+            "password": "Marygo693151",
             "database": "Drive-Lounge",
-            "host": "13.94.34.229",
+            "host": "drivelounge.database.windows.net",
             "instancename": "MSQLEXPRESS",
             "dialect": "mssql",
             "port": "1433"
