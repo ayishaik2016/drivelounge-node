@@ -149,7 +149,7 @@ const config = {
           production: {
             "username": "dluser",
             "password": "Marygo693151",
-            "database": "Drivelounge",
+            "database": "drivelounge",
             "host": "drivelounge.database.windows.net",
             "instancename": "MSQLEXPRESS",
             "dialect": "mssql",
@@ -158,7 +158,7 @@ const config = {
         dev: {
             "username": "dluser",
             "password": "Marygo693151",
-            "database": "Drivelounge",
+            "database": "drivelounge",
             "host": "drivelounge.database.windows.net",
             "instancename": "MSQLEXPRESS",
             "dialect": "mssql",
@@ -169,7 +169,7 @@ const config = {
             // "password": "P@ssw0rd",
             "username": "dluser",
             "password": "Marygo693151",
-            "database": "Drivelounge",
+            "database": "drivelounge",
             "host": "drivelounge.database.windows.net",
             "instancename": "MSQLEXPRESS",
             "dialect": "mssql",
