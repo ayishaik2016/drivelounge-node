@@ -30,6 +30,7 @@
     "@nestjs/platform-express": "^9.3.12",
     "@nestjs/platform-fastify": "^9.3.12",
     "annotations": "^1.1.2",
+    "axios": "^0.17.1",
     "confidence": "^4.0.2",
     "connect-busboy": "0.0.2",
     "cors": "^2.8.5",
@@ -54,6 +55,8 @@
     "otp-generator": "^2.0.0",
     "password-hash": "^1.2.2",
     "pipe": "^1.1.0",
+    "puppeteer": "^2.1.1",
+    "qrcode": "^1.4.4",
     "randomstring": "^1.1.5",
     "sequelize": "^6.3.5",
     "sniffr": "^1.2.0",
@@ -71,5 +74,6 @@
     "roots": [
       "../test"
     ]
-  }
+  },
+  "type": "module"
 }
